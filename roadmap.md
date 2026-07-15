@@ -190,17 +190,17 @@ pytest tests/test_models.py tests/test_config.py tests/test_pipelines_factory.py
 
 ## Fase 2 — Dataset adapter e examples
 
-- [ ] **Fase 2 completata**
+- [x] **Fase 2 completata**
 
 **Obiettivo:** collegare `dataset/` al benchmark senza riscrivere il GT a mano.
 
 ### Checklist deliverable
 
-- [ ] `src/ddt_local/benchmark/ground_truth.py` — loader `ground_truth_ddt.json` → `DocumentoDDT`
-- [ ] `examples/ddt/` — symlink o copia dei 10 PDF singoli (no raccolta)
-- [ ] `examples/ground_truth/` — un JSON per documento (schema Pydantic)
-- [ ] `scripts/generate_ground_truth_examples.py`
-- [ ] `examples/config/benchmark.yaml` — run: `ocr_qwen4b`, `ocr_qwen9b`, `vision_qwen4b`, `vision_qwen9b`, `native_only`
+- [x] `src/ddt_local/benchmark/ground_truth.py` — loader `ground_truth_ddt.json` → `DocumentoDDT`
+- [x] `examples/ddt/` — symlink o copia dei 10 PDF singoli (no raccolta)
+- [x] `examples/ground_truth/` — un JSON per documento (schema Pydantic)
+- [x] `scripts/generate_ground_truth_examples.py`
+- [x] `examples/config/benchmark.yaml` — run: `ocr_qwen4b`, `ocr_qwen9b`, `vision_qwen4b`, `vision_qwen9b`, `native_only`
 
 ### Gate
 
@@ -216,15 +216,15 @@ pytest tests/test_ground_truth.py
 
 ## Fase 3 — Database SQLite
 
-- [ ] **Fase 3 completata**
+- [x] **Fase 3 completata**
 
 **Obiettivo:** persistenza transazionale; produzione e benchmark separati.
 
 ### Checklist deliverable
 
-- [ ] `src/ddt_local/database.py` — tabelle: `source_documents`, `ocr_pages`, `ddt_headers`, `ddt_lines`, `validation_issues`, `benchmark_runs`, `benchmark_results`
-- [ ] SHA-256 UNIQUE su `source_documents`, FK, transazioni
-- [ ] Stub CLI `init` → crea `~/DDT/data/ddt.sqlite3` (o `DDT_HOME`)
+- [x] `src/ddt_local/database.py` — tabelle: `source_documents`, `ocr_pages`, `ddt_headers`, `ddt_lines`, `validation_issues`, `benchmark_runs`, `benchmark_results`
+- [x] SHA-256 UNIQUE su `source_documents`, FK, transazioni
+- [ ] Stub CLI `init` → crea `~/DDT/data/ddt.sqlite3` (o `DDT_HOME`) *(previsto Fase 9)*
 
 ### Gate
 
@@ -239,14 +239,14 @@ pytest tests/test_database.py
 
 ## Fase 4 — Gestione file, lock, stabilità
 
-- [ ] **Fase 4 completata**
+- [x] **Fase 4 completata**
 
 **Obiettivo:** idempotenza e sicurezza multipiattaforma.
 
 ### Checklist deliverable
 
-- [ ] `src/ddt_local/files.py` — lock, stabilità file, SHA-256, move `processed/YYYY/MM/` / `errors/YYYY/MM/`, sanitizzazione, anti path-traversal
-- [ ] `src/ddt_local/scanner.py` — scan inbox, skip duplicati per hash
+- [x] `src/ddt_local/files.py` — lock, stabilità file, SHA-256, move `processed/YYYY/MM/` / `errors/YYYY/MM/`, sanitizzazione, anti path-traversal
+- [x] `src/ddt_local/scanner.py` — scan inbox, skip duplicati per hash
 
 ### Gate
 
@@ -261,14 +261,14 @@ pytest tests/test_files.py tests/test_scanner.py
 
 ## Fase 5 — Client Ollama
 
-- [ ] **Fase 5 completata** (richiede gate Ollama)
+- [x] **Fase 5 completata** (richiede gate Ollama)
 
 **Obiettivo:** client HTTP riusabile (retry, memoria, structured output).
 
 ### Checklist deliverable
 
-- [ ] `src/ddt_local/ollama.py` — health, lista modelli, `POST /api/generate`, `format` structured output, `keep_alive: 0`, temperatura 0, seed, tracemalloc
-- [ ] Errori gestiti: servizio down, modello assente, timeout, risposta vuota
+- [x] `src/ddt_local/ollama.py` — health, lista modelli, `POST /api/generate`, `format` structured output, `keep_alive: 0`, temperatura 0, seed, tracemalloc
+- [x] Errori gestiti: servizio down, modello assente, timeout, risposta vuota
 
 ### Gate
 
@@ -538,7 +538,10 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | Data | Fase | Unit test | Ollama | Benchmark | Note |
 |------|------|-----------|--------|-----------|------|
 | 2026-07-15 | 0 | N/A | N/A | N/A | Scaffolding: pip install -e, CLI --help OK |
-| 2026-07-15 | 1 | PASS (26) | N/A | N/A | models, config, logging, pipeline factory |
+| 2026-07-15 | 2 | PASS (37) | N/A | N/A | GT adapter, 10 examples JSON, benchmark.yaml |
+| 2026-07-15 | 3 | PASS (62) | N/A | N/A | SQLite 7 tabelle, transazioni, FK cascade |
+| 2026-07-15 | 4 | PASS (62) | N/A | N/A | lock, hash, stabilità, scanner inbox |
+| 2026-07-15 | 5 | PASS (62) | PASS (1) | N/A | Ollama client mock + health integration |
 
 ---
 
