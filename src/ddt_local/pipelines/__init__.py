@@ -4,8 +4,11 @@ from __future__ import annotations
 
 from typing import Protocol, runtime_checkable
 
-from ddt_local.config import AppConfig
+from ddt_local.config import AppConfig, PipelineSettings, settings_from_config
 from ddt_local.models import ExtractionResult, PipelineName, SourceDocument
+from ddt_local.pipelines.native_only import NativeOnlyPipeline
+from ddt_local.pipelines.ocr_struct import OcrStructPipeline
+from ddt_local.pipelines.vision_direct import VisionDirectPipeline
 
 
 @runtime_checkable
@@ -17,35 +20,25 @@ class ExtractionPipeline(Protocol):
     def extract(self, document: SourceDocument) -> ExtractionResult: ...
 
 
-class PipelineNotImplementedError(NotImplementedError):
-    """Raised when a pipeline class is registered but not yet implemented."""
-
-
-class _StubPipeline:
-    """Placeholder pipeline used until concrete implementations exist."""
-
-    def __init__(self, name: str, config: AppConfig) -> None:
-        self.name = name
-        self._config = config
-
-    def extract(self, document: SourceDocument) -> ExtractionResult:
-        raise PipelineNotImplementedError(
-            f"Pipeline '{self.name}' is not yet implemented. "
-            f"Document: {document.filename}"
-        )
-
-
-def create_pipeline(config: AppConfig) -> ExtractionPipeline:
+def create_pipeline(
+    config: AppConfig,
+    settings: PipelineSettings | None = None,
+) -> ExtractionPipeline:
     """Instantiate the configured extraction pipeline."""
-    pipeline_name = config.pipeline.strip().lower()
+    resolved = settings or settings_from_config(config)
+    pipeline_name = resolved.pipeline.strip().lower()
 
     valid = {p.value for p in PipelineName}
     if pipeline_name not in valid:
         raise ValueError(
-            f"Unknown pipeline '{config.pipeline}'. Valid options: {sorted(valid)}"
+            f"Unknown pipeline '{resolved.pipeline}'. Valid options: {sorted(valid)}"
         )
 
-    return _StubPipeline(name=pipeline_name, config=config)
+    if pipeline_name == PipelineName.OCR_STRUCT.value:
+        return OcrStructPipeline(resolved, config)
+    if pipeline_name == PipelineName.VISION_DIRECT.value:
+        return VisionDirectPipeline(resolved, config)
+    return NativeOnlyPipeline(resolved, config)
 
 
 def resolve_pipeline_name(name: str) -> PipelineName:

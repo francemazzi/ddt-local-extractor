@@ -122,3 +122,56 @@ class SourceDocument(BaseModel):
 def documento_ddt_json_schema() -> dict[str, Any]:
     """Return JSON Schema for structured Ollama output."""
     return DocumentoDDT.model_json_schema()
+
+
+def ollama_documento_schema() -> dict[str, Any]:
+    """Simplified JSON Schema without $ref (more reliable with Ollama format)."""
+    soggetto = {
+        "type": "object",
+        "properties": {
+            "ragione_sociale": {"type": ["string", "null"]},
+            "partita_iva": {"type": ["string", "null"]},
+            "codice_fiscale": {"type": ["string", "null"]},
+            "indirizzo": {"type": ["string", "null"]},
+        },
+    }
+    riga = {
+        "type": "object",
+        "properties": {
+            "numero_riga": {"type": ["integer", "null"]},
+            "codice": {"type": ["string", "null"]},
+            "descrizione": {"type": ["string", "null"]},
+            "quantita": {"type": ["string", "number", "null"]},
+            "unita_misura": {"type": ["string", "null"]},
+            "lotto": {"type": ["string", "null"]},
+            "matricola": {"type": ["string", "null"]},
+        },
+    }
+    documento = {
+        "type": "object",
+        "properties": {
+            "numero_ddt": {"type": ["string", "null"]},
+            "data_ddt": {"type": ["string", "null"]},
+            "riferimento_ordine": {"type": ["string", "null"]},
+            "causale_trasporto": {"type": ["string", "null"]},
+            "numero_colli": {"type": ["string", "number", "null"]},
+            "peso_lordo": {"type": ["string", "number", "null"]},
+            "peso_netto": {"type": ["string", "number", "null"]},
+            "vettore": {"type": ["string", "null"]},
+            "destinazione": {"type": ["string", "null"]},
+        },
+    }
+    return {
+        "type": "object",
+        "properties": {
+            "source_filename": {"type": "string"},
+            "fornitore": soggetto,
+            "destinatario": soggetto,
+            "documento": documento,
+            "articoli": {"type": "array", "items": riga},
+            "quality_score": {"type": "number"},
+            "campi_da_verificare": {"type": "array", "items": {"type": "string"}},
+            "warning": {"type": "array", "items": {"type": "string"}},
+        },
+        "required": ["source_filename", "fornitore", "destinatario", "documento", "articoli"],
+    }

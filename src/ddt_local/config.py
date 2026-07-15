@@ -26,6 +26,23 @@ def _env_int(key: str, default: int) -> int:
 
 
 @dataclass(frozen=True)
+class PipelineSettings:
+    """Per-run pipeline parameters (production config or benchmark overrides)."""
+
+    pipeline: str
+    ocr_model: str
+    struct_model: str
+    vision_model: str
+    render_dpi: int
+    ocr_table_pass: bool = False
+    min_native_text_chars: int = 200
+    seed: int = 42
+    max_retries: int = 3
+    request_timeout_seconds: int = 180
+    unload_models: bool = True
+
+
+@dataclass(frozen=True)
 class AppConfig:
     ddt_home: Path
     ollama_base_url: str
@@ -42,6 +59,7 @@ class AppConfig:
     keep_raw_ocr: bool
     unload_models: bool
     log_level: str
+    ocr_table_pass: bool = False
 
     @property
     def inbox_dir(self) -> Path:
@@ -106,4 +124,37 @@ def load_config() -> AppConfig:
         keep_raw_ocr=_env_bool("DDT_KEEP_RAW_OCR", True),
         unload_models=_env_bool("DDT_UNLOAD_MODELS", True),
         log_level=os.getenv("DDT_LOG_LEVEL", "INFO").upper(),
+        ocr_table_pass=_env_bool("DDT_OCR_TABLE_PASS", False),
+    )
+
+
+def settings_from_config(config: AppConfig, **overrides: object) -> PipelineSettings:
+    """Build PipelineSettings from AppConfig with optional overrides."""
+    base = {
+        "pipeline": config.pipeline,
+        "ocr_model": config.ocr_model,
+        "struct_model": config.struct_model,
+        "vision_model": config.vision_model,
+        "render_dpi": config.render_dpi,
+        "ocr_table_pass": config.ocr_table_pass,
+        "min_native_text_chars": config.min_native_text_chars,
+        "seed": config.seed,
+        "max_retries": config.max_retries,
+        "request_timeout_seconds": config.request_timeout_seconds,
+        "unload_models": config.unload_models,
+    }
+    base.update(overrides)
+    return PipelineSettings(**base)  # type: ignore[arg-type]
+
+
+def settings_from_benchmark_run(config: AppConfig, run: dict) -> PipelineSettings:
+    """Build PipelineSettings from a benchmark YAML run entry."""
+    return settings_from_config(
+        config,
+        pipeline=run.get("pipeline", config.pipeline),
+        ocr_model=run.get("ocr_model", config.ocr_model),
+        struct_model=run.get("struct_model", config.struct_model),
+        vision_model=run.get("vision_model", config.vision_model),
+        render_dpi=int(run.get("render_dpi", config.render_dpi)),
+        ocr_table_pass=bool(run.get("ocr_table_pass", config.ocr_table_pass)),
     )

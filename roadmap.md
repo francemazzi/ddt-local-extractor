@@ -308,18 +308,18 @@ pytest tests/ -m ollama
 
 ## Fase 7 — Pipelines di estrazione (3 strategie)
 
-- [ ] **Fase 7 completata** (richiede gate Ollama)
+- [x] **Fase 7 completata** (richiede gate Ollama)
 
 **Obiettivo:** strategie intercambiabili senza duplicazione di codice.
 
 ### Checklist deliverable
 
-- [ ] `pipelines/ocr_struct.py` — default produzione
-- [ ] `pipelines/vision_direct.py` — vision one-shot
-- [ ] `pipelines/native_only.py` — baseline; fail esplicito su scansioni
-- [ ] `validation.py` — Pydantic + una riparazione controllata
-- [ ] `quality.py` — `quality_score` deterministico, `requires_review`
-- [ ] `extractor.py` — `ExtractionResult` con metadati per fase
+- [x] `pipelines/ocr_struct.py` — default produzione
+- [x] `pipelines/vision_direct.py` — vision one-shot
+- [x] `pipelines/native_only.py` — baseline; fail esplicito su scansioni
+- [x] `validation.py` — Pydantic + una riparazione controllata
+- [x] `quality.py` — `quality_score` deterministico, `requires_review`
+- [x] `extractor.py` — `ExtractionResult` con metadati per fase
 
 ### Gate
 
@@ -393,16 +393,16 @@ python -m ddt_local status
 
 ## Fase 10 — Modulo benchmark (scoring, runner, report)
 
-- [ ] **Fase 10 completata** (richiede gate Ollama + benchmark)
+- [x] **Fase 10 completata** (richiede gate Ollama + benchmark)
 
 **Obiettivo:** confronto configurazioni locali vs ground truth (modulo di prima classe).
 
 ### Checklist deliverable
 
-- [ ] `benchmark/scoring.py` — metriche campi, allineamento righe (codice+qty, fallback descrizione), pesi, score aggregato
-- [ ] `benchmark/runner.py` — YAML config, `repetitions`, unload modelli tra run, tabelle `benchmark_*`
-- [ ] `benchmark/report.py` — CSV, Excel comparativo, classifica a terminale
-- [ ] CLI `benchmark` con `--documents`, `--ground-truth`, `--config`, `--runs-filter`, `--repetitions`, `--keep-artifacts`
+- [x] `benchmark/scoring.py` — metriche campi, allineamento righe (codice+qty, fallback descrizione), pesi, score aggregato
+- [x] `benchmark/runner.py` — YAML config, `repetitions`, unload modelli tra run, tabelle `benchmark_*`
+- [x] `benchmark/report.py` — CSV, Excel comparativo, classifica a terminale
+- [x] CLI `benchmark` con `--documents`, `--ground-truth`, `--config`, `--runs-filter`, `--repetitions`, `--keep-artifacts`
 
 ### Gate
 
@@ -496,7 +496,7 @@ Aggiornare a `[x]` solo dopo verifica reale (mappatura alle fasi indicative).
 - [ ] 10. Errore non lascia il DB in stato parziale — *F3 / F8*
 - [ ] 11. Documento spostato in `processed` o `errors` — *F4 / F9*
 - [ ] 12. Job termina dopo aver svuotato la coda — *F9*
-- [ ] 13. `benchmark` esegue ≥ 2 config sugli esempi e produce CSV, Excel, classifica — *F10*
+- [x] 13. `benchmark` esegue ≥ 2 config sugli esempi e produce CSV, Excel, classifica — *F10*
 - [ ] 14. Cambiare modello/pipeline = solo config, senza toccare codice — *F1 / F7 / F10*
 - [ ] 15. Tutti i test unitari passano senza modelli né rete — *F12*
 - [ ] 16. Funziona su macOS e Windows — *F11 / F12*
@@ -543,6 +543,8 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | 2026-07-15 | 4 | PASS (62) | N/A | N/A | lock, hash, stabilità, scanner inbox |
 | 2026-07-15 | 5 | PASS (62) | PASS (1) | N/A | Ollama client mock + health integration |
 | 2026-07-15 | 6 | PASS (74) | PASS (12) | N/A | pdf.py, ocr.py, GLM-OCR su scansione 08 |
+| 2026-07-15 | 7 | PASS | PASS | N/A | ocr_struct/vision/native; ocr_struct su doc 01 OK |
+| 2026-07-15 | 10 | PASS | PASS | PASS | 10 doc × 5 config; rank: ocr_qwen4b 0.77 |
 
 ---
 

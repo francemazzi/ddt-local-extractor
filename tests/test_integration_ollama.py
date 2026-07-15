@@ -146,7 +146,7 @@ def test_phase6_glm_ocr_on_scanned_page(ollama_client: OllamaClient, ensure_mode
     ollama_client.unload_model(config.ocr_model)
 
 
-# --- Phase 7: pipeline factory resolves while Ollama up ---
+# --- Phase 7: ocr_struct extraction on native PDF ---
 
 
 @pytest.mark.ollama
@@ -154,3 +154,50 @@ def test_phase7_pipeline_factory_while_ollama_up(ensure_models):
     config = load_config()
     pipeline = create_pipeline(config)
     assert pipeline.name == config.pipeline
+
+
+@pytest.mark.ollama
+def test_phase7_ocr_struct_on_native_pdf(ollama_client: OllamaClient, ensure_models):
+    from ddt_local.config import settings_from_config
+    from ddt_local.extractor import extract_document
+    from ddt_local.models import SourceDocument
+
+    config = load_config()
+    settings = settings_from_config(config, pipeline="ocr_struct", struct_model="qwen3.5:4b")
+    source = SourceDocument(
+        path=NATIVE_PDF,
+        filename=NATIVE_PDF.name,
+        sha256=compute_sha256(NATIVE_PDF),
+        size_bytes=NATIVE_PDF.stat().st_size,
+    )
+    result = extract_document(source, config, settings)
+    assert result.success, result.error_message
+    assert result.document is not None
+    assert result.document.documento.numero_ddt
+    ollama_client.unload_model(settings.struct_model)
+
+
+# --- Phase 10: benchmark scoring smoke with live extract (subset) ---
+
+
+@pytest.mark.ollama
+def test_phase10_benchmark_scoring_after_extract(ollama_client: OllamaClient, ensure_models):
+    from ddt_local.benchmark.scoring import score_prediction
+    from ddt_local.config import settings_from_config
+    from ddt_local.extractor import extract_document
+    from ddt_local.models import SourceDocument
+
+    gt_docs = load_dataset_ground_truth(GT_PATH)
+    gt = gt_docs[NATIVE_PDF.name]
+    config = load_config()
+    settings = settings_from_config(config, pipeline="native_only", struct_model="qwen3.5:4b")
+    source = SourceDocument(
+        path=NATIVE_PDF,
+        filename=NATIVE_PDF.name,
+        sha256=compute_sha256(NATIVE_PDF),
+        size_bytes=NATIVE_PDF.stat().st_size,
+    )
+    result = extract_document(source, config, settings)
+    score = score_prediction(gt, result.document if result.success else None)
+    assert 0.0 <= score.weighted_score <= 1.0
+    ollama_client.unload_model(settings.struct_model)

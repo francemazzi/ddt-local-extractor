@@ -74,16 +74,21 @@ class OllamaClient:
         return [m.get("name", "") for m in payload.get("models", [])]
 
     def ensure_model_available(self, model: str) -> None:
-        if not self.health_check():
-            raise OllamaUnavailableError(
-                f"Ollama is not reachable at {self._base_url}. "
-                "Start it with: ollama serve"
-            )
-        installed = self.list_models()
+        if getattr(self, "_models_cache", None) is None:
+            if not self.health_check():
+                raise OllamaUnavailableError(
+                    f"Ollama is not reachable at {self._base_url}. "
+                    "Start it with: ollama serve"
+                )
+            self._models_cache = self.list_models()
+        installed = self._models_cache
         if model not in installed and not any(model in m for m in installed):
-            raise OllamaModelNotFoundError(
-                f"Model '{model}' is not installed. Run: ollama pull {model}"
-            )
+            self._models_cache = self.list_models()
+            installed = self._models_cache
+            if model not in installed and not any(model in m for m in installed):
+                raise OllamaModelNotFoundError(
+                    f"Model '{model}' is not installed. Run: ollama pull {model}"
+                )
 
     def unload_model(self, model: str) -> None:
         if not self._config.unload_models:
@@ -105,12 +110,14 @@ class OllamaClient:
         system: str | None = None,
         json_schema: dict[str, Any] | None = None,
         images: list[str] | None = None,
+        keep_alive: str | int | None = None,
     ) -> GenerateResult:
         self.ensure_model_available(model)
         payload: dict[str, Any] = {
             "model": model,
             "prompt": prompt,
             "stream": False,
+            "think": False,
             "options": {
                 "temperature": 0,
                 "seed": self._config.seed,
@@ -122,8 +129,11 @@ class OllamaClient:
             payload["format"] = json_schema
         if images:
             payload["images"] = images
-        if self._config.unload_models:
-            payload["keep_alive"] = 0
+        if keep_alive is not None:
+            payload["keep_alive"] = keep_alive
+        elif self._config.unload_models:
+            # Keep model warm during active use; unload_model() frees RAM later
+            payload["keep_alive"] = "10m"
 
         return self._post_generate(payload, model)
 
@@ -174,13 +184,19 @@ class OllamaClient:
                 last_error = OllamaTimeoutError(
                     f"Ollama request timed out after {self._config.request_timeout_seconds}s"
                 )
-            except httpx.HTTPError as exc:
+            except (httpx.HTTPError, httpx.TransportError) as exc:
                 last_error = OllamaServiceError(str(exc))
             except OllamaEmptyResponseError as exc:
                 last_error = exc
 
             if attempt < self._config.max_retries:
-                backoff = min(2 ** attempt, 10)
+                backoff = min(2 ** attempt, 15)
+                logger.warning(
+                    "Ollama generate attempt %s failed (%s); retry in %ss",
+                    attempt,
+                    type(last_error).__name__,
+                    backoff,
+                )
                 time.sleep(backoff)
 
         tracemalloc.stop()
