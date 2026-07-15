@@ -156,6 +156,10 @@ class OllamaClient:
                     data = response.json()
                 text = (data.get("response") or "").strip()
                 if not text:
+                    thinking = (data.get("thinking") or "").strip()
+                    if thinking:
+                        text = thinking
+                if not text:
                     raise OllamaEmptyResponseError(f"Empty response from model '{model}'")
                 _, peak = tracemalloc.get_traced_memory()
                 tracemalloc.stop()

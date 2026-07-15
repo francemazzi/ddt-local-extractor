@@ -110,6 +110,24 @@ def test_generate_text_timeout(client: OllamaClient, monkeypatch):
                 client.generate_text(model="qwen3.5:4b", prompt="test")
 
 
+def test_generate_text_uses_thinking_when_response_empty(client: OllamaClient):
+    with patch.object(client, "ensure_model_available"):
+        with patch("httpx.Client") as mock_client_cls:
+            mock_client = MagicMock()
+            mock_client.__enter__.return_value = mock_client
+            mock_client.post.return_value = _mock_response(
+                {"response": "", "thinking": '{"status": "ok"}'}
+            )
+            mock_client_cls.return_value = mock_client
+
+            result = client.generate_text(
+                model="qwen3.5:4b",
+                prompt="test",
+                json_schema={"type": "object"},
+            )
+            assert "ok" in result.text
+
+
 @pytest.mark.ollama
 def test_ollama_integration_health_and_models(app_config):
     """Requires local Ollama running with models pulled."""

@@ -284,14 +284,14 @@ pytest tests/ -m ollama
 
 ## Fase 6 — Pipeline PDF e OCR
 
-- [ ] **Fase 6 completata** (richiede gate Ollama)
+- [x] **Fase 6 completata** (richiede gate Ollama)
 
 **Obiettivo:** testo nativo + rendering + GLM-OCR.
 
 ### Checklist deliverable
 
-- [ ] `src/ddt_local/pdf.py` — PyMuPDF, soglia testo nativo, PNG a `DDT_RENDER_DPI`, cleanup temp
-- [ ] `src/ddt_local/ocr.py` — GLM-OCR `/api/generate`, doppio passaggio tabelle opzionale, concatenazione pagine
+- [x] `src/ddt_local/pdf.py` — PyMuPDF, soglia testo nativo, PNG a `DDT_RENDER_DPI`, cleanup temp
+- [x] `src/ddt_local/ocr.py` — GLM-OCR `/api/generate`, doppio passaggio tabelle opzionale, concatenazione pagine
 
 ### Gate
 
@@ -542,6 +542,7 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | 2026-07-15 | 3 | PASS (62) | N/A | N/A | SQLite 7 tabelle, transazioni, FK cascade |
 | 2026-07-15 | 4 | PASS (62) | N/A | N/A | lock, hash, stabilità, scanner inbox |
 | 2026-07-15 | 5 | PASS (62) | PASS (1) | N/A | Ollama client mock + health integration |
+| 2026-07-15 | 6 | PASS (74) | PASS (12) | N/A | pdf.py, ocr.py, GLM-OCR su scansione 08 |
 
 ---
 
