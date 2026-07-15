@@ -1,0 +1,664 @@
+{
+  "dataset": "DDT sintetici - siderurgia e lavorazione lamiere",
+  "warning": "Tutti i dati, le aziende e gli identificativi sono inventati. Documenti non validi ai fini fiscali.",
+  "documents": [
+    {
+      "file": "01_DDT_Acciai_Nordest.pdf",
+      "layout": 0,
+      "accent": "#155E75",
+      "sender": {
+        "name": "Acciai Nordest S.r.l.",
+        "address": "Via delle Colate 18",
+        "city": "36040 Brendola (VI)",
+        "vat": "IT00000010001",
+        "phone": "+39 0444 000101",
+        "email": "logistica@acciai-nordest.example"
+      },
+      "recipient": {
+        "name": "Officine Trave Blu S.r.l.",
+        "address": "Viale dei Telai 42",
+        "city": "35010 Limena (PD)",
+        "vat": "IT00000020002"
+      },
+      "destination": "Magazzino 2 - Ingresso merci, Via del Tornio 7, 35010 Limena (PD)",
+      "ddt_number": "NE/2026/0714-018",
+      "date": "14/07/2026",
+      "customer_code": "CL-2048",
+      "order_ref": "OC 781/2026 del 09/07/2026",
+      "reason": "Vendita",
+      "delivery_terms": "Franco destino",
+      "transport": "Vettore",
+      "carrier": "Trasporti Quercia S.r.l. - targa simulata ZA000ZZ",
+      "start": "14/07/2026 ore 07:35",
+      "packages": "3 pacchi reggiati",
+      "pallets": "0",
+      "net_weight": 5368.0,
+      "gross_weight": 5406.0,
+      "notes": "Materiale asciutto. Certificati 3.1 inviati via e-mail.",
+      "scan": false,
+      "items": [
+        {
+          "code": "S355-10-2010",
+          "description": "Lamiera nera S355JR 2000 x 1000 x 10 mm",
+          "um": "FOGLI",
+          "qty": 24,
+          "lot": "COL-26A184",
+          "weight": 1884.0
+        },
+        {
+          "code": "S235-08-3015",
+          "description": "Lamiera decapata S235JR 3000 x 1500 x 8 mm",
+          "um": "FOGLI",
+          "qty": 18,
+          "lot": "COL-26A201",
+          "weight": 5087.0
+        },
+        {
+          "code": "TAGLIO-01",
+          "description": "Rettifica peso per tagli a misura - sfrido trattenuto dal fornitore",
+          "um": "KG",
+          "qty": -1603.0,
+          "lot": "N/A",
+          "weight": -1603.0
+        }
+      ]
+    },
+    {
+      "file": "02_DDT_Lamiera_Prisma.pdf",
+      "layout": 1,
+      "accent": "#C2410C",
+      "scan": false,
+      "sender": {
+        "name": "Lamiera Prisma S.p.A.",
+        "address": "Strada delle Bobine 6",
+        "city": "25030 Coccaglio (BS)",
+        "vat": "IT00000030003",
+        "phone": "+39 030 000202",
+        "email": "spedizioni@lamieraprisma.example"
+      },
+      "recipient": {
+        "name": "Carpenteria Futura S.r.l.",
+        "address": "Via degli Argani 11",
+        "city": "24050 Grassobbio (BG)",
+        "vat": "IT00000040004"
+      },
+      "destination": "Stabilimento carpenteria, Via degli Argani 11, 24050 Grassobbio (BG)",
+      "ddt_number": "LP-26-00487",
+      "date": "14-07-2026",
+      "customer_code": "CFU-019",
+      "order_ref": "PO-44018 / commessa KAPPA",
+      "reason": "Vendita",
+      "delivery_terms": "Porto franco",
+      "transport": "Mittente",
+      "carrier": "Automezzo aziendale - targa simulata YA000YY",
+      "start": "14-07-2026 08:10",
+      "packages": "2 bancali + 1 fascio",
+      "pallets": "2",
+      "net_weight": 2748.5,
+      "gross_weight": 2792.0,
+      "notes": "Scarico laterale. Contattare il magazzino 30 minuti prima dell'arrivo.",
+      "items": [
+        {
+          "code": "DX51D-Z140",
+          "description": "Lamiera zincata DX51D+Z140 1500 x 1000 x 1,5 mm",
+          "um": "PZ",
+          "qty": 120,
+          "lot": "Z140-771",
+          "weight": 1413.0
+        },
+        {
+          "code": "DC01-20",
+          "description": "Lamiera laminata a freddo DC01 2000 x 1000 x 2,0 mm",
+          "um": "PZ",
+          "qty": 50,
+          "lot": "FRE-998",
+          "weight": 1570.0
+        },
+        {
+          "code": "PROF-L40",
+          "description": "Profilo angolare L 40 x 40 x 4 mm, barre da 6 m",
+          "um": "BARRE",
+          "qty": 16,
+          "lot": "PR-044",
+          "weight": 232.0
+        },
+        {
+          "code": "ABBUONO",
+          "description": "Differenza peso rilevata a bilancia",
+          "um": "KG",
+          "qty": -466.5,
+          "lot": "-",
+          "weight": -466.5
+        }
+      ]
+    },
+    {
+      "file": "03_DDT_Sidera_Coil.pdf",
+      "layout": 2,
+      "accent": "#991B1B",
+      "scan": false,
+      "sender": {
+        "name": "Sidera Coil S.r.l.",
+        "address": "Via del Laminatoio 23",
+        "city": "20013 Magenta (MI)",
+        "vat": "IT00000050005",
+        "phone": "+39 02 000303",
+        "email": "ddt@sideracoil.example"
+      },
+      "recipient": {
+        "name": "MetalForma 27 S.r.l.",
+        "address": "Via della Pressa 27",
+        "city": "21040 Origgio (VA)",
+        "vat": "IT00000060006"
+      },
+      "destination": "MetalForma 27 - Baia C, Via della Pressa 27, 21040 Origgio (VA)",
+      "ddt_number": "SC 0142/26",
+      "date": "14 luglio 2026",
+      "customer_code": "MF27",
+      "order_ref": "Ordine web OW-2026-8831",
+      "reason": "Vendita",
+      "delivery_terms": "Reso stabilimento destinatario",
+      "transport": "Vettore",
+      "carrier": "Logistica Martello S.c.a.r.l. - targa simulata XA000XX",
+      "start": "14/07/2026 - 06:55",
+      "packages": "3 coils su selle",
+      "pallets": "0",
+      "net_weight": 9120.0,
+      "gross_weight": 9245.0,
+      "notes": "Coils con asse orizzontale. Obbligo di utilizzo culle di sicurezza.",
+      "items": [
+        {
+          "code": "COIL-DC01-12",
+          "description": "Coil DC01 EN 10130, sp. 1,20 mm, larghezza 1250 mm",
+          "um": "KG",
+          "qty": 3180.0,
+          "lot": "HEAT H26-0441",
+          "weight": 3180.0
+        },
+        {
+          "code": "COIL-S280-20",
+          "description": "Coil S280GD+Z, sp. 2,00 mm, larghezza 1000 mm",
+          "um": "KG",
+          "qty": 2940.0,
+          "lot": "HEAT H26-0450",
+          "weight": 2940.0
+        },
+        {
+          "code": "COIL-HR-30",
+          "description": "Coil laminato a caldo S235JR, sp. 3,00 mm, larghezza 1500 mm",
+          "um": "KG",
+          "qty": 3000.0,
+          "lot": "HEAT H26-0462",
+          "weight": 3000.0
+        }
+      ]
+    },
+    {
+      "file": "04_DDT_Piana_Inox.pdf",
+      "layout": 3,
+      "accent": "#047857",
+      "scan": false,
+      "sender": {
+        "name": "Piana Inox S.r.l.",
+        "address": "Via delle Satinatrici 5",
+        "city": "43122 Parma (PR)",
+        "vat": "IT00000070007",
+        "phone": "+39 0521 000404",
+        "email": "magazzino@pianainox.example"
+      },
+      "recipient": {
+        "name": "Taglio Laser Delta S.r.l.",
+        "address": "Via del Raggio 19",
+        "city": "42122 Reggio Emilia (RE)",
+        "vat": "IT00000080008"
+      },
+      "destination": "Reparto taglio 1, Via del Raggio 19, 42122 Reggio Emilia (RE)",
+      "ddt_number": "DDT-2026-000913",
+      "date": "2026-07-14",
+      "customer_code": "TLD-88",
+      "order_ref": "Rif. commessa DELTA-611",
+      "reason": "Conto lavorazione",
+      "delivery_terms": "Franco destino",
+      "transport": "Mittente",
+      "carrier": "Piana Inox - mezzo proprio, targa simulata WA000WW",
+      "start": "14/07/2026 09:20",
+      "packages": "4 casse",
+      "pallets": "4",
+      "net_weight": 1926.4,
+      "gross_weight": 2042.0,
+      "notes": "Materiale di proprieta del mittente inviato per taglio laser. Non fatturare.",
+      "items": [
+        {
+          "code": "INOX304-15",
+          "description": "Lamiera inox AISI 304 2B 3000 x 1500 x 1,5 mm",
+          "um": "FOGLI",
+          "qty": 28,
+          "lot": "304-2B-621",
+          "weight": 1510.6
+        },
+        {
+          "code": "INOX316-20",
+          "description": "Lamiera inox AISI 316L satinata 2000 x 1000 x 2,0 mm",
+          "um": "FOGLI",
+          "qty": 10,
+          "lot": "316-SAT-113",
+          "weight": 320.0
+        },
+        {
+          "code": "CAMP-304",
+          "description": "Campioni inox 304 per prova parametri laser",
+          "um": "PZ",
+          "qty": 6,
+          "lot": "C-090",
+          "weight": 18.0
+        },
+        {
+          "code": "FILM-PVC",
+          "description": "Film protettivo PVC applicato su un lato",
+          "um": "MQ",
+          "qty": 126.0,
+          "lot": "FP-22",
+          "weight": 77.8
+        }
+      ]
+    },
+    {
+      "file": "05_DDT_Metalli_Quota.pdf",
+      "layout": 4,
+      "accent": "#4F46E5",
+      "scan": false,
+      "sender": {
+        "name": "Metalli Quota S.r.l.",
+        "address": "Via delle Travi 31",
+        "city": "41122 Modena (MO)",
+        "vat": "IT00000090009",
+        "phone": "+39 059 000505",
+        "email": "ufficio.trasporti@metalliquota.example"
+      },
+      "recipient": {
+        "name": "Strutture Appennino S.r.l.",
+        "address": "Via del Cavalletto 8",
+        "city": "40037 Sasso Marconi (BO)",
+        "vat": "IT00000100010"
+      },
+      "destination": "Cantiere simulato SA-17, Via del Cavalletto 8, 40037 Sasso Marconi (BO)",
+      "ddt_number": "MQ/00077",
+      "date": "14/07/26",
+      "customer_code": "SA-170",
+      "order_ref": "Ordine 26-771 / fase 2",
+      "reason": "Vendita",
+      "delivery_terms": "Porto assegnato",
+      "transport": "Vettore",
+      "carrier": "Freccia Merci S.r.l. - targa simulata VA000VV",
+      "start": "14/07/26 - 10.05",
+      "packages": "7 fasci",
+      "pallets": "0",
+      "net_weight": 6384.2,
+      "gross_weight": 6430.0,
+      "notes": "Profili marcati con etichetta commessa. Conservare separati per posizione.",
+      "items": [
+        {
+          "code": "IPE-200",
+          "description": "Trave IPE 200 S275JR, lunghezza 12.000 mm",
+          "um": "PZ",
+          "qty": 8,
+          "lot": "CA-771A",
+          "weight": 2688.0
+        },
+        {
+          "code": "HEA-160",
+          "description": "Trave HEA 160 S275JR, lunghezza 12.000 mm",
+          "um": "PZ",
+          "qty": 6,
+          "lot": "CA-771B",
+          "weight": 2188.8
+        },
+        {
+          "code": "TUB-100x50",
+          "description": "Tubolare rettangolare 100 x 50 x 5 mm, barre da 6 m",
+          "um": "PZ",
+          "qty": 12,
+          "lot": "CA-771C",
+          "weight": 1507.4
+        }
+      ]
+    },
+    {
+      "file": "06_DDT_Bobine_Tirreno.pdf",
+      "layout": 5,
+      "accent": "#0369A1",
+      "scan": false,
+      "sender": {
+        "name": "Bobine Tirreno S.p.A.",
+        "address": "Largo del Decapaggio 4",
+        "city": "16152 Genova (GE)",
+        "vat": "IT00000110011",
+        "phone": "+39 010 000606",
+        "email": "shipping@bobinetirreno.example"
+      },
+      "recipient": {
+        "name": "Piegatura Nova S.r.l.",
+        "address": "Via delle Piegatrici 12",
+        "city": "15057 Tortona (AL)",
+        "vat": "IT00000120012"
+      },
+      "destination": "Piegatura Nova, varco merci Nord, Via delle Piegatrici 12, 15057 Tortona (AL)",
+      "ddt_number": "BT-14/07/26-55",
+      "date": "14.07.2026",
+      "customer_code": "PN-512",
+      "order_ref": "Contratto quadro CQ-26-014, richiamo 09",
+      "reason": "Vendita",
+      "delivery_terms": "DAP Tortona",
+      "transport": "Vettore",
+      "carrier": "Ponente Cargo S.r.l. - targa simulata UA000UU",
+      "start": "14.07.2026 ore 05:40",
+      "packages": "4 coils",
+      "pallets": "0",
+      "net_weight": 11742.0,
+      "gross_weight": 11960.0,
+      "notes": "Peso da bascula. Tolleranza spessore secondo EN 10143.",
+      "items": [
+        {
+          "code": "BT-Z275-08",
+          "description": "Coil zincato DX51D+Z275, 0,80 x 1250 mm",
+          "um": "kg",
+          "qty": 2860.0,
+          "lot": "B260714-01",
+          "weight": 2860.0
+        },
+        {
+          "code": "BT-Z275-10",
+          "description": "Coil zincato DX51D+Z275, 1,00 x 1000 mm",
+          "um": "kg",
+          "qty": 2974.0,
+          "lot": "B260714-02",
+          "weight": 2974.0
+        },
+        {
+          "code": "BT-ZM120-15",
+          "description": "Coil rivestito zinco-magnesio ZM120, 1,50 x 1250 mm",
+          "um": "kg",
+          "qty": 3055.0,
+          "lot": "B260714-03",
+          "weight": 3055.0
+        },
+        {
+          "code": "BT-PRE-09",
+          "description": "Coil preverniciato RAL simulato 9002, 0,90 x 1000 mm",
+          "um": "kg",
+          "qty": 2853.0,
+          "lot": "B260714-04",
+          "weight": 2853.0
+        }
+      ]
+    },
+    {
+      "file": "07_DDT_Acciaio_Vettore.pdf",
+      "layout": 6,
+      "accent": "#7C3AED",
+      "scan": false,
+      "sender": {
+        "name": "Acciaio Vettore S.r.l.",
+        "address": "Via delle Cesoiatrici 9",
+        "city": "37135 Verona (VR)",
+        "vat": "IT00000130013",
+        "phone": "+39 045 000707",
+        "email": "ddt@acciaiovettore.example"
+      },
+      "recipient": {
+        "name": "Cantieri FerroLab S.r.l.",
+        "address": "Via del Montaggio 44",
+        "city": "46100 Mantova (MN)",
+        "vat": "IT00000140014"
+      },
+      "destination": "Deposito esterno FL-3, Strada del Montaggio 44, 46100 Mantova (MN)",
+      "ddt_number": "AV26-391",
+      "date": "14/07/2026",
+      "customer_code": "FERROLAB",
+      "order_ref": "Richiesta materiale RM-391-2",
+      "reason": "Trasferimento tra depositi",
+      "delivery_terms": "Non applicabile",
+      "transport": "Destinatario",
+      "carrier": "Ritiro a cura del destinatario - targa simulata TA000TT",
+      "start": "14/07/2026 11:45",
+      "packages": "2 fasci + 1 pallet",
+      "pallets": "1",
+      "net_weight": 3480.8,
+      "gross_weight": 3522.0,
+      "notes": "Documento interno simulato. Verificare il numero dei colli allo scarico.",
+      "items": [
+        {
+          "code": "P355-12",
+          "description": "Piatti S355 120 x 12 mm, lunghezza 6 m",
+          "um": "BARRE",
+          "qty": 30,
+          "lot": "AV-390A",
+          "weight": 2034.7
+        },
+        {
+          "code": "TONDO-30",
+          "description": "Tondo pieno C45 diametro 30 mm, lunghezza 3 m",
+          "um": "BARRE",
+          "qty": 40,
+          "lot": "AV-390B",
+          "weight": 666.0
+        },
+        {
+          "code": "RETE-8",
+          "description": "Rete elettrosaldata 2000 x 3000, maglia 100 x 100, filo 8 mm",
+          "um": "PANNELLI",
+          "qty": 25,
+          "lot": "AV-390C",
+          "weight": 780.1
+        }
+      ]
+    },
+    {
+      "file": "08_DDT_Inox_Labirinto_scansione.pdf",
+      "layout": 7,
+      "accent": "#0F766E",
+      "scan": true,
+      "sender": {
+        "name": "Inox Labirinto S.r.l.",
+        "address": "Via della Spazzolatura 16",
+        "city": "31020 San Fior (TV)",
+        "vat": "IT00000150015",
+        "phone": "+39 0438 000808",
+        "email": "documenti@inoxlabirinto.example"
+      },
+      "recipient": {
+        "name": "Meccanica Campo S.r.l.",
+        "address": "Via delle Flange 3",
+        "city": "33080 Fiume Veneto (PN)",
+        "vat": "IT00000160016"
+      },
+      "destination": "Meccanica Campo - accettazione merci, Via delle Flange 3, 33080 Fiume Veneto (PN)",
+      "ddt_number": "IL-2026-0074",
+      "date": "14/07/2026",
+      "customer_code": "MC-0031",
+      "order_ref": "Ord. 883-C / disegno MC-FLG-18",
+      "reason": "Reso da lavorazione",
+      "delivery_terms": "Franco destino",
+      "transport": "Mittente",
+      "carrier": "Mezzo proprio - targa simulata SA000SS",
+      "start": "14/07/2026 13:15",
+      "packages": "5 casse",
+      "pallets": "5",
+      "net_weight": 984.6,
+      "gross_weight": 1098.0,
+      "notes": "Particolari tagliati ad acqua e sbavati. Quantita verificata a campione.",
+      "items": [
+        {
+          "code": "FLG-304-080",
+          "description": "Flangia inox 304, diametro 80 mm, sp. 8 mm da disegno",
+          "um": "PZ",
+          "qty": 240,
+          "lot": "IL-R074-A",
+          "weight": 226.8
+        },
+        {
+          "code": "FLG-316-120",
+          "description": "Flangia inox 316L, diametro 120 mm, sp. 10 mm da disegno",
+          "um": "PZ",
+          "qty": 160,
+          "lot": "IL-R074-B",
+          "weight": 361.6
+        },
+        {
+          "code": "STAFFA-304",
+          "description": "Staffa piegata inox 304, sp. 4 mm, finitura satinata",
+          "um": "PZ",
+          "qty": 420,
+          "lot": "IL-R074-C",
+          "weight": 289.8
+        },
+        {
+          "code": "SFRIDO-316",
+          "description": "Sfrido inox 316L restituito in cassa separata",
+          "um": "KG",
+          "qty": 94.4,
+          "lot": "IL-R074-S",
+          "weight": 94.4
+        },
+        {
+          "code": "CAMPIONI",
+          "description": "Campioni di avviamento non conformi, identificati in rosso",
+          "um": "PZ",
+          "qty": 12,
+          "lot": "IL-R074-X",
+          "weight": 12.0
+        }
+      ]
+    },
+    {
+      "file": "09_DDT_Lamiere_Aurora.pdf",
+      "layout": 8,
+      "accent": "#B45309",
+      "scan": false,
+      "sender": {
+        "name": "Lamiere Aurora S.r.l.",
+        "address": "Via del Plasma 28",
+        "city": "10040 Volvera (TO)",
+        "vat": "IT00000170017",
+        "phone": "+39 011 000909",
+        "email": "bolle@lamiereaurora.example"
+      },
+      "recipient": {
+        "name": "Telaio Gamma S.r.l.",
+        "address": "Via delle Saldature 14",
+        "city": "12100 Cuneo (CN)",
+        "vat": "IT00000180018"
+      },
+      "destination": "Telaio Gamma, ingresso Sud, Via delle Saldature 14, 12100 Cuneo (CN)",
+      "ddt_number": "LA/26/1559",
+      "date": "14-07-2026",
+      "customer_code": "TG-101",
+      "order_ref": "Ordine TG-55210, consegna parziale 1/2",
+      "reason": "Vendita",
+      "delivery_terms": "Franco destino",
+      "transport": "Vettore",
+      "carrier": "Nord Ovest Trasporti S.r.l. - targa simulata RA000RR",
+      "start": "14-07-2026 / 12:30",
+      "packages": "6 pacchi",
+      "pallets": "0",
+      "net_weight": 7255.0,
+      "gross_weight": 7318.0,
+      "notes": "Consegna parziale. Restano da consegnare 12 fogli cod. LA-W450-12.",
+      "items": [
+        {
+          "code": "LA-W450-06",
+          "description": "Lamiera antiusura simulata W450 3000 x 1500 x 6 mm",
+          "um": "FOGLI",
+          "qty": 22,
+          "lot": "W45-2607A",
+          "weight": 4662.9
+        },
+        {
+          "code": "LA-S700-04",
+          "description": "Lamiera altoresistenziale S700MC 2500 x 1250 x 4 mm",
+          "um": "FOGLI",
+          "qty": 18,
+          "lot": "S70-2607B",
+          "weight": 1766.3
+        },
+        {
+          "code": "LA-CORTEN-3",
+          "description": "Lamiera tipo corten S355J2W 2000 x 1000 x 3 mm",
+          "um": "FOGLI",
+          "qty": 16,
+          "lot": "CR-2607C",
+          "weight": 825.8
+        }
+      ]
+    },
+    {
+      "file": "10_DDT_Centro_Siderurgico_Orione_scansione.pdf",
+      "layout": 9,
+      "accent": "#334155",
+      "scan": true,
+      "sender": {
+        "name": "Centro Siderurgico Orione S.r.l.",
+        "address": "Via dei Nastri 50",
+        "city": "35020 Albignasego (PD)",
+        "vat": "IT00000190019",
+        "phone": "+39 049 001010",
+        "email": "ddt@orionesiderurgico.example"
+      },
+      "recipient": {
+        "name": "Assemblaggi Valnova S.r.l.",
+        "address": "Via della Puntatura 6",
+        "city": "45100 Rovigo (RO)",
+        "vat": "IT00000200020"
+      },
+      "destination": "Assemblaggi Valnova, ribalta 4, Via della Puntatura 6, 45100 Rovigo (RO)",
+      "ddt_number": "CSO-000281/2026",
+      "date": "14/07/2026",
+      "customer_code": "AVN-760",
+      "order_ref": "Programma consegne WK29 / call-off 281",
+      "reason": "Vendita",
+      "delivery_terms": "Franco destino",
+      "transport": "Vettore",
+      "carrier": "Adige Logistica S.r.l. - targa simulata QA000QQ",
+      "start": "14/07/2026 ore 14:05",
+      "packages": "3 pallet + 2 fasci",
+      "pallets": "3",
+      "net_weight": 4188.7,
+      "gross_weight": 4270.0,
+      "notes": "Allegata distinta di imballo. Merce soggetta a controllo dimensionale in ingresso.",
+      "items": [
+        {
+          "code": "STRIP-DC04",
+          "description": "Nastri DC04 tagliati, 1,20 x 220 mm",
+          "um": "KG",
+          "qty": 1245.5,
+          "lot": "CSO-281-A",
+          "weight": 1245.5
+        },
+        {
+          "code": "STRIP-HC420",
+          "description": "Nastri HC420LA, 1,50 x 310 mm",
+          "um": "KG",
+          "qty": 1678.2,
+          "lot": "CSO-281-B",
+          "weight": 1678.2
+        },
+        {
+          "code": "BLANK-S355",
+          "description": "Sbozzati rettangolari S355MC 480 x 320 x 5 mm",
+          "um": "PZ",
+          "qty": 360,
+          "lot": "CSO-281-C",
+          "weight": 868.0
+        },
+        {
+          "code": "DIST-20",
+          "description": "Distanziali in piatto 40 x 10 mm, lunghezza 200 mm",
+          "um": "PZ",
+          "qty": 640,
+          "lot": "CSO-281-D",
+          "weight": 397.0
+        }
+      ]
+    }
+  ]
+}
