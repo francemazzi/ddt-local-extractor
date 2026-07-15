@@ -1,0 +1,58 @@
+{
+  "source_filename": "09_DDT_Lamiere_Aurora.pdf",
+  "fornitore": {
+    "ragione_sociale": "Lamiere Aurora S.r.l.",
+    "partita_iva": "IT00000170017",
+    "codice_fiscale": null,
+    "indirizzo": "Via del Plasma 28, 10040 Volvera (TO)"
+  },
+  "destinatario": {
+    "ragione_sociale": "Telaio Gamma S.r.l.",
+    "partita_iva": "IT00000180018",
+    "codice_fiscale": null,
+    "indirizzo": "Via delle Saldature 14, 12100 Cuneo (CN)"
+  },
+  "documento": {
+    "numero_ddt": "LA/26/1559",
+    "data_ddt": "2026-07-14",
+    "riferimento_ordine": "Ordine TG-55210, consegna parziale 1/2",
+    "causale_trasporto": "Vendita",
+    "numero_colli": "6",
+    "peso_lordo": "7318.0",
+    "peso_netto": "7255.0",
+    "vettore": "Nord Ovest Trasporti S.r.l. - targa simulata RA000RR",
+    "destinazione": "Telaio Gamma, ingresso Sud, Via delle Saldature 14, 12100 Cuneo (CN)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "LA-W450-06",
+      "descrizione": "Lamiera antiusura simulata W450 3000 x 1500 x 6 mm",
+      "quantita": "22",
+      "unita_misura": "FOGLI",
+      "lotto": "W45-2607A",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "LA-S700-04",
+      "descrizione": "Lamiera altoresistenziale S700MC 2500 x 1250 x 4 mm",
+      "quantita": "18",
+      "unita_misura": "FOGLI",
+      "lotto": "S70-2607B",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "LA-CORTEN-3",
+      "descrizione": "Lamiera tipo corten S355J2W 2000 x 1000 x 3 mm",
+      "quantita": "16",
+      "unita_misura": "FOGLI",
+      "lotto": "CR-2607C",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}

@@ -1,0 +1,76 @@
+{
+  "source_filename": "08_DDT_Inox_Labirinto_scansione.pdf",
+  "fornitore": {
+    "ragione_sociale": "Inox Labirinto S.r.l.",
+    "partita_iva": "IT00000150015",
+    "codice_fiscale": null,
+    "indirizzo": "Via della Spazzolatura 16, 31020 San Fior (TV)"
+  },
+  "destinatario": {
+    "ragione_sociale": "Meccanica Campo S.r.l.",
+    "partita_iva": "IT00000160016",
+    "codice_fiscale": null,
+    "indirizzo": "Via delle Flange 3, 33080 Fiume Veneto (PN)"
+  },
+  "documento": {
+    "numero_ddt": "IL-2026-0074",
+    "data_ddt": "2026-07-14",
+    "riferimento_ordine": "Ord. 883-C / disegno MC-FLG-18",
+    "causale_trasporto": "Reso da lavorazione",
+    "numero_colli": "5",
+    "peso_lordo": "1098.0",
+    "peso_netto": "984.6",
+    "vettore": "Mezzo proprio - targa simulata SA000SS",
+    "destinazione": "Meccanica Campo - accettazione merci, Via delle Flange 3, 33080 Fiume Veneto (PN)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "FLG-304-080",
+      "descrizione": "Flangia inox 304, diametro 80 mm, sp. 8 mm da disegno",
+      "quantita": "240",
+      "unita_misura": "PZ",
+      "lotto": "IL-R074-A",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "FLG-316-120",
+      "descrizione": "Flangia inox 316L, diametro 120 mm, sp. 10 mm da disegno",
+      "quantita": "160",
+      "unita_misura": "PZ",
+      "lotto": "IL-R074-B",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "STAFFA-304",
+      "descrizione": "Staffa piegata inox 304, sp. 4 mm, finitura satinata",
+      "quantita": "420",
+      "unita_misura": "PZ",
+      "lotto": "IL-R074-C",
+      "matricola": null
+    },
+    {
+      "numero_riga": 4,
+      "codice": "SFRIDO-316",
+      "descrizione": "Sfrido inox 316L restituito in cassa separata",
+      "quantita": "94.4",
+      "unita_misura": "KG",
+      "lotto": "IL-R074-S",
+      "matricola": null
+    },
+    {
+      "numero_riga": 5,
+      "codice": "CAMPIONI",
+      "descrizione": "Campioni di avviamento non conformi, identificati in rosso",
+      "quantita": "12",
+      "unita_misura": "PZ",
+      "lotto": "IL-R074-X",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}

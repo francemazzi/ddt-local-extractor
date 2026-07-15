@@ -1,0 +1,58 @@
+{
+  "source_filename": "05_DDT_Metalli_Quota.pdf",
+  "fornitore": {
+    "ragione_sociale": "Metalli Quota S.r.l.",
+    "partita_iva": "IT00000090009",
+    "codice_fiscale": null,
+    "indirizzo": "Via delle Travi 31, 41122 Modena (MO)"
+  },
+  "destinatario": {
+    "ragione_sociale": "Strutture Appennino S.r.l.",
+    "partita_iva": "IT00000100010",
+    "codice_fiscale": null,
+    "indirizzo": "Via del Cavalletto 8, 40037 Sasso Marconi (BO)"
+  },
+  "documento": {
+    "numero_ddt": "MQ/00077",
+    "data_ddt": null,
+    "riferimento_ordine": "Ordine 26-771 / fase 2",
+    "causale_trasporto": "Vendita",
+    "numero_colli": "7",
+    "peso_lordo": "6430.0",
+    "peso_netto": "6384.2",
+    "vettore": "Freccia Merci S.r.l. - targa simulata VA000VV",
+    "destinazione": "Cantiere simulato SA-17, Via del Cavalletto 8, 40037 Sasso Marconi (BO)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "IPE-200",
+      "descrizione": "Trave IPE 200 S275JR, lunghezza 12.000 mm",
+      "quantita": "8",
+      "unita_misura": "PZ",
+      "lotto": "CA-771A",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "HEA-160",
+      "descrizione": "Trave HEA 160 S275JR, lunghezza 12.000 mm",
+      "quantita": "6",
+      "unita_misura": "PZ",
+      "lotto": "CA-771B",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "TUB-100x50",
+      "descrizione": "Tubolare rettangolare 100 x 50 x 5 mm, barre da 6 m",
+      "quantita": "12",
+      "unita_misura": "PZ",
+      "lotto": "CA-771C",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}

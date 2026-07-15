@@ -1,0 +1,67 @@
+{
+  "source_filename": "06_DDT_Bobine_Tirreno.pdf",
+  "fornitore": {
+    "ragione_sociale": "Bobine Tirreno S.p.A.",
+    "partita_iva": "IT00000110011",
+    "codice_fiscale": null,
+    "indirizzo": "Largo del Decapaggio 4, 16152 Genova (GE)"
+  },
+  "destinatario": {
+    "ragione_sociale": "Piegatura Nova S.r.l.",
+    "partita_iva": "IT00000120012",
+    "codice_fiscale": null,
+    "indirizzo": "Via delle Piegatrici 12, 15057 Tortona (AL)"
+  },
+  "documento": {
+    "numero_ddt": "BT-14/07/26-55",
+    "data_ddt": null,
+    "riferimento_ordine": "Contratto quadro CQ-26-014, richiamo 09",
+    "causale_trasporto": "Vendita",
+    "numero_colli": "4",
+    "peso_lordo": "11960.0",
+    "peso_netto": "11742.0",
+    "vettore": "Ponente Cargo S.r.l. - targa simulata UA000UU",
+    "destinazione": "Piegatura Nova, varco merci Nord, Via delle Piegatrici 12, 15057 Tortona (AL)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "BT-Z275-08",
+      "descrizione": "Coil zincato DX51D+Z275, 0,80 x 1250 mm",
+      "quantita": "2860.0",
+      "unita_misura": "kg",
+      "lotto": "B260714-01",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "BT-Z275-10",
+      "descrizione": "Coil zincato DX51D+Z275, 1,00 x 1000 mm",
+      "quantita": "2974.0",
+      "unita_misura": "kg",
+      "lotto": "B260714-02",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "BT-ZM120-15",
+      "descrizione": "Coil rivestito zinco-magnesio ZM120, 1,50 x 1250 mm",
+      "quantita": "3055.0",
+      "unita_misura": "kg",
+      "lotto": "B260714-03",
+      "matricola": null
+    },
+    {
+      "numero_riga": 4,
+      "codice": "BT-PRE-09",
+      "descrizione": "Coil preverniciato RAL simulato 9002, 0,90 x 1000 mm",
+      "quantita": "2853.0",
+      "unita_misura": "kg",
+      "lotto": "B260714-04",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}

@@ -1,0 +1,58 @@
+{
+  "source_filename": "07_DDT_Acciaio_Vettore.pdf",
+  "fornitore": {
+    "ragione_sociale": "Acciaio Vettore S.r.l.",
+    "partita_iva": "IT00000130013",
+    "codice_fiscale": null,
+    "indirizzo": "Via delle Cesoiatrici 9, 37135 Verona (VR)"
+  },
+  "destinatario": {
+    "ragione_sociale": "Cantieri FerroLab S.r.l.",
+    "partita_iva": "IT00000140014",
+    "codice_fiscale": null,
+    "indirizzo": "Via del Montaggio 44, 46100 Mantova (MN)"
+  },
+  "documento": {
+    "numero_ddt": "AV26-391",
+    "data_ddt": "2026-07-14",
+    "riferimento_ordine": "Richiesta materiale RM-391-2",
+    "causale_trasporto": "Trasferimento tra depositi",
+    "numero_colli": "2",
+    "peso_lordo": "3522.0",
+    "peso_netto": "3480.8",
+    "vettore": "Ritiro a cura del destinatario - targa simulata TA000TT",
+    "destinazione": "Deposito esterno FL-3, Strada del Montaggio 44, 46100 Mantova (MN)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "P355-12",
+      "descrizione": "Piatti S355 120 x 12 mm, lunghezza 6 m",
+      "quantita": "30",
+      "unita_misura": "BARRE",
+      "lotto": "AV-390A",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "TONDO-30",
+      "descrizione": "Tondo pieno C45 diametro 30 mm, lunghezza 3 m",
+      "quantita": "40",
+      "unita_misura": "BARRE",
+      "lotto": "AV-390B",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "RETE-8",
+      "descrizione": "Rete elettrosaldata 2000 x 3000, maglia 100 x 100, filo 8 mm",
+      "quantita": "25",
+      "unita_misura": "PANNELLI",
+      "lotto": "AV-390C",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}

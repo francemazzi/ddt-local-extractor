@@ -1,0 +1,58 @@
+{
+  "source_filename": "01_DDT_Acciai_Nordest.pdf",
+  "fornitore": {
+    "ragione_sociale": "Acciai Nordest S.r.l.",
+    "partita_iva": "IT00000010001",
+    "codice_fiscale": null,
+    "indirizzo": "Via delle Colate 18, 36040 Brendola (VI)"
+  },
+  "destinatario": {
+    "ragione_sociale": "Officine Trave Blu S.r.l.",
+    "partita_iva": "IT00000020002",
+    "codice_fiscale": null,
+    "indirizzo": "Viale dei Telai 42, 35010 Limena (PD)"
+  },
+  "documento": {
+    "numero_ddt": "NE/2026/0714-018",
+    "data_ddt": "2026-07-14",
+    "riferimento_ordine": "OC 781/2026 del 09/07/2026",
+    "causale_trasporto": "Vendita",
+    "numero_colli": "3",
+    "peso_lordo": "5406.0",
+    "peso_netto": "5368.0",
+    "vettore": "Trasporti Quercia S.r.l. - targa simulata ZA000ZZ",
+    "destinazione": "Magazzino 2 - Ingresso merci, Via del Tornio 7, 35010 Limena (PD)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "S355-10-2010",
+      "descrizione": "Lamiera nera S355JR 2000 x 1000 x 10 mm",
+      "quantita": "24",
+      "unita_misura": "FOGLI",
+      "lotto": "COL-26A184",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "S235-08-3015",
+      "descrizione": "Lamiera decapata S235JR 3000 x 1500 x 8 mm",
+      "quantita": "18",
+      "unita_misura": "FOGLI",
+      "lotto": "COL-26A201",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "TAGLIO-01",
+      "descrizione": "Rettifica peso per tagli a misura - sfrido trattenuto dal fornitore",
+      "quantita": "-1603.0",
+      "unita_misura": "KG",
+      "lotto": "N/A",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}

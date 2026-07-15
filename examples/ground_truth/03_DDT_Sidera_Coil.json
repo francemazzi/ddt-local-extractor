@@ -1,0 +1,58 @@
+{
+  "source_filename": "03_DDT_Sidera_Coil.pdf",
+  "fornitore": {
+    "ragione_sociale": "Sidera Coil S.r.l.",
+    "partita_iva": "IT00000050005",
+    "codice_fiscale": null,
+    "indirizzo": "Via del Laminatoio 23, 20013 Magenta (MI)"
+  },
+  "destinatario": {
+    "ragione_sociale": "MetalForma 27 S.r.l.",
+    "partita_iva": "IT00000060006",
+    "codice_fiscale": null,
+    "indirizzo": "Via della Pressa 27, 21040 Origgio (VA)"
+  },
+  "documento": {
+    "numero_ddt": "SC 0142/26",
+    "data_ddt": null,
+    "riferimento_ordine": "Ordine web OW-2026-8831",
+    "causale_trasporto": "Vendita",
+    "numero_colli": "3",
+    "peso_lordo": "9245.0",
+    "peso_netto": "9120.0",
+    "vettore": "Logistica Martello S.c.a.r.l. - targa simulata XA000XX",
+    "destinazione": "MetalForma 27 - Baia C, Via della Pressa 27, 21040 Origgio (VA)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "COIL-DC01-12",
+      "descrizione": "Coil DC01 EN 10130, sp. 1,20 mm, larghezza 1250 mm",
+      "quantita": "3180.0",
+      "unita_misura": "KG",
+      "lotto": "HEAT H26-0441",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "COIL-S280-20",
+      "descrizione": "Coil S280GD+Z, sp. 2,00 mm, larghezza 1000 mm",
+      "quantita": "2940.0",
+      "unita_misura": "KG",
+      "lotto": "HEAT H26-0450",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "COIL-HR-30",
+      "descrizione": "Coil laminato a caldo S235JR, sp. 3,00 mm, larghezza 1500 mm",
+      "quantita": "3000.0",
+      "unita_misura": "KG",
+      "lotto": "HEAT H26-0462",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}

@@ -1,0 +1,67 @@
+{
+  "source_filename": "10_DDT_Centro_Siderurgico_Orione_scansione.pdf",
+  "fornitore": {
+    "ragione_sociale": "Centro Siderurgico Orione S.r.l.",
+    "partita_iva": "IT00000190019",
+    "codice_fiscale": null,
+    "indirizzo": "Via dei Nastri 50, 35020 Albignasego (PD)"
+  },
+  "destinatario": {
+    "ragione_sociale": "Assemblaggi Valnova S.r.l.",
+    "partita_iva": "IT00000200020",
+    "codice_fiscale": null,
+    "indirizzo": "Via della Puntatura 6, 45100 Rovigo (RO)"
+  },
+  "documento": {
+    "numero_ddt": "CSO-000281/2026",
+    "data_ddt": "2026-07-14",
+    "riferimento_ordine": "Programma consegne WK29 / call-off 281",
+    "causale_trasporto": "Vendita",
+    "numero_colli": "3",
+    "peso_lordo": "4270.0",
+    "peso_netto": "4188.7",
+    "vettore": "Adige Logistica S.r.l. - targa simulata QA000QQ",
+    "destinazione": "Assemblaggi Valnova, ribalta 4, Via della Puntatura 6, 45100 Rovigo (RO)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "STRIP-DC04",
+      "descrizione": "Nastri DC04 tagliati, 1,20 x 220 mm",
+      "quantita": "1245.5",
+      "unita_misura": "KG",
+      "lotto": "CSO-281-A",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "STRIP-HC420",
+      "descrizione": "Nastri HC420LA, 1,50 x 310 mm",
+      "quantita": "1678.2",
+      "unita_misura": "KG",
+      "lotto": "CSO-281-B",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "BLANK-S355",
+      "descrizione": "Sbozzati rettangolari S355MC 480 x 320 x 5 mm",
+      "quantita": "360",
+      "unita_misura": "PZ",
+      "lotto": "CSO-281-C",
+      "matricola": null
+    },
+    {
+      "numero_riga": 4,
+      "codice": "DIST-20",
+      "descrizione": "Distanziali in piatto 40 x 10 mm, lunghezza 200 mm",
+      "quantita": "640",
+      "unita_misura": "PZ",
+      "lotto": "CSO-281-D",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}

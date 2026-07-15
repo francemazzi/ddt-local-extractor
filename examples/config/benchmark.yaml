@@ -1,3 +1,24 @@
-# Benchmark configuration — see roadmap.md for full run definitions (Fase 2)
-runs: []
+runs:
+  - name: ocr_qwen4b
+    pipeline: ocr_struct
+    ocr_model: glm-ocr:latest
+    struct_model: qwen3.5:4b
+    render_dpi: 250
+  - name: ocr_qwen9b
+    pipeline: ocr_struct
+    ocr_model: glm-ocr:latest
+    struct_model: qwen3.5:9b
+    render_dpi: 250
+  - name: vision_qwen4b
+    pipeline: vision_direct
+    vision_model: qwen3.5:4b
+    render_dpi: 250
+  - name: vision_qwen9b
+    pipeline: vision_direct
+    vision_model: qwen3.5:9b
+    render_dpi: 250
+  - name: native_only_baseline
+    pipeline: native_only
+    struct_model: qwen3.5:4b
+    render_dpi: 250
 repetitions: 1

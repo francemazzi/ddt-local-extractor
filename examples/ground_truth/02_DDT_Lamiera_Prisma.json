@@ -1,0 +1,67 @@
+{
+  "source_filename": "02_DDT_Lamiera_Prisma.pdf",
+  "fornitore": {
+    "ragione_sociale": "Lamiera Prisma S.p.A.",
+    "partita_iva": "IT00000030003",
+    "codice_fiscale": null,
+    "indirizzo": "Strada delle Bobine 6, 25030 Coccaglio (BS)"
+  },
+  "destinatario": {
+    "ragione_sociale": "Carpenteria Futura S.r.l.",
+    "partita_iva": "IT00000040004",
+    "codice_fiscale": null,
+    "indirizzo": "Via degli Argani 11, 24050 Grassobbio (BG)"
+  },
+  "documento": {
+    "numero_ddt": "LP-26-00487",
+    "data_ddt": "2026-07-14",
+    "riferimento_ordine": "PO-44018 / commessa KAPPA",
+    "causale_trasporto": "Vendita",
+    "numero_colli": "2",
+    "peso_lordo": "2792.0",
+    "peso_netto": "2748.5",
+    "vettore": "Automezzo aziendale - targa simulata YA000YY",
+    "destinazione": "Stabilimento carpenteria, Via degli Argani 11, 24050 Grassobbio (BG)"
+  },
+  "articoli": [
+    {
+      "numero_riga": 1,
+      "codice": "DX51D-Z140",
+      "descrizione": "Lamiera zincata DX51D+Z140 1500 x 1000 x 1,5 mm",
+      "quantita": "120",
+      "unita_misura": "PZ",
+      "lotto": "Z140-771",
+      "matricola": null
+    },
+    {
+      "numero_riga": 2,
+      "codice": "DC01-20",
+      "descrizione": "Lamiera laminata a freddo DC01 2000 x 1000 x 2,0 mm",
+      "quantita": "50",
+      "unita_misura": "PZ",
+      "lotto": "FRE-998",
+      "matricola": null
+    },
+    {
+      "numero_riga": 3,
+      "codice": "PROF-L40",
+      "descrizione": "Profilo angolare L 40 x 40 x 4 mm, barre da 6 m",
+      "quantita": "16",
+      "unita_misura": "BARRE",
+      "lotto": "PR-044",
+      "matricola": null
+    },
+    {
+      "numero_riga": 4,
+      "codice": "ABBUONO",
+      "descrizione": "Differenza peso rilevata a bilancia",
+      "quantita": "-466.5",
+      "unita_misura": "KG",
+      "lotto": "-",
+      "matricola": null
+    }
+  ],
+  "quality_score": 0.0,
+  "campi_da_verificare": [],
+  "warning": []
+}
