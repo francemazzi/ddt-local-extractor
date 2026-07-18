@@ -15,6 +15,7 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 SCRIPTS = PROJECT_ROOT / "scripts"
 
 
+@pytest.mark.skipif(os.name == "nt", reason="Bash and launchd are validated on the macOS runner")
 @pytest.mark.parametrize("name", ["run_macos.sh", "install_launchd.sh", "pull_models.sh"])
 def test_shell_scripts_have_valid_bash_syntax(name: str):
     result = subprocess.run(
@@ -26,6 +27,7 @@ def test_shell_scripts_have_valid_bash_syntax(name: str):
     assert result.returncode == 0, result.stderr
 
 
+@pytest.mark.skipif(os.name == "nt", reason="launchd is a macOS facility")
 def test_launchd_dry_run_generates_a_valid_agent_plist(tmp_path: Path):
     environment = {**os.environ, "DDT_HOME": str(tmp_path / "DDT")}
     result = subprocess.run(
