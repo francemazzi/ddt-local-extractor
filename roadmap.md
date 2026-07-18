@@ -359,15 +359,15 @@ pytest tests/test_excel.py
 
 ## Fase 9 — Job produzione end-to-end
 
-- [ ] **Fase 9 completata** (richiede gate Ollama)
+- [x] **Fase 9 completata** (richiede gate Ollama)
 
 **Obiettivo:** job one-shot da inbox a processed/errors.
 
 ### Checklist deliverable
 
-- [ ] CLI completa: `init`, `doctor`, `run --once`, `export`, `status`, `reprocess`
-- [ ] Flusso: scan → lock → hash → extract → DB → Excel atomico → move → exit 0
-- [ ] `doctor`: Python, dir, permessi, Ollama, modelli, SQLite, Excel
+- [x] CLI completa: `init`, `doctor`, `run --once`, `export`, `status`, `reprocess`
+- [x] Flusso: scan → lock → hash → extract → DB → Excel atomico → move → exit 0
+- [x] `doctor`: Python, dir, permessi, Ollama, modelli, SQLite, Excel
 
 ### Gate
 
@@ -484,18 +484,18 @@ python -m ddt_local benchmark \
 
 Aggiornare a `[x]` solo dopo verifica reale (mappatura alle fasi indicative).
 
-- [ ] 1. `python -m ddt_local init` crea l’ambiente operativo — *F9 / F3*
-- [ ] 2. `python -m ddt_local doctor` verifica dipendenze e modelli — *F9*
-- [ ] 3. PDF digitale elaborato senza OCR visuale quando possibile — *F6 / F7*
-- [ ] 4. PDF scansionato elaborato tramite GLM-OCR — *F6 / F7*
-- [ ] 5. Risultato validato con Pydantic — *F7*
+- [x] 1. `python -m ddt_local init` crea l’ambiente operativo — *F9 / F3*
+- [x] 2. `python -m ddt_local doctor` verifica dipendenze e modelli — *F9*
+- [x] 3. PDF digitale elaborato senza OCR visuale quando possibile — *F6 / F7*
+- [x] 4. PDF scansionato elaborato tramite GLM-OCR — *F6 / F7*
+- [x] 5. Risultato validato con Pydantic — *F7*
 - [x] 6. SQLite: intestazione, pagine OCR, righe, problemi — *F3 / F8*
 - [x] 7. Excel con fogli richiesti — *F8*
-- [ ] 8. Documento duplicato non rielaborato in produzione — *F4 / F9*
-- [ ] 9. Due job simultanei non elaborano lo stesso file — *F4 / F9*
+- [x] 8. Documento duplicato non rielaborato in produzione — *F4 / F9*
+- [x] 9. Due job simultanei non elaborano lo stesso file — *F4 / F9*
 - [x] 10. Errore non lascia il DB in stato parziale — *F3 / F8*
-- [ ] 11. Documento spostato in `processed` o `errors` — *F4 / F9*
-- [ ] 12. Job termina dopo aver svuotato la coda — *F9*
+- [x] 11. Documento spostato in `processed` o `errors` — *F4 / F9*
+- [x] 12. Job termina dopo aver svuotato la coda — *F9*
 - [x] 13. `benchmark` esegue ≥ 2 config sugli esempi e produce CSV, Excel, classifica — *F10*
 - [ ] 14. Cambiare modello/pipeline = solo config, senza toccare codice — *F1 / F7 / F10*
 - [ ] 15. Tutti i test unitari passano senza modelli né rete — *F12*
@@ -546,6 +546,7 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | 2026-07-15 | 7 | PASS | PASS | N/A | ocr_struct/vision/native; ocr_struct su doc 01 OK |
 | 2026-07-15 | 10 | PASS | PASS | PASS | 10 doc × 5 config; rank: ocr_qwen4b 0.77 |
 | 2026-07-18 | 8 | PASS (108) | N/A | N/A | Persistenza produzione transazionale; Excel atomico con 4 fogli e anti-formula injection |
+| 2026-07-18 | 9 | PASS (116) | PASS (15) | N/A | CLI completa; run reale su 01 nativo + 08 scansione → SQLite, Excel e 2 PDF archiviati |
 
 ---
 

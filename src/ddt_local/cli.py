@@ -3,12 +3,16 @@
 from __future__ import annotations
 
 import argparse
+import importlib
+import os
 import sys
+from tempfile import NamedTemporaryFile
 from pathlib import Path
 
 from ddt_local.config import load_config
 from ddt_local.database import Database
 from ddt_local.logging_config import configure_logging, get_logger, new_run_id
+from ddt_local.production import initialize_operational_home, requeue_document, run_once
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -41,19 +45,7 @@ def build_parser() -> argparse.ArgumentParser:
 
 def cmd_init() -> int:
     config = load_config()
-    for path in (
-        config.ddt_home,
-        config.inbox_dir,
-        config.processed_dir,
-        config.errors_dir,
-        config.raw_dir,
-        config.logs_dir,
-        config.output_dir,
-        config.benchmark_dir,
-        config.data_dir,
-    ):
-        path.mkdir(parents=True, exist_ok=True)
-    Database(config.database_path).initialize()
+    initialize_operational_home(config)
     print(f"Initialized DDT home at {config.ddt_home}")
     return 0
 
@@ -63,7 +55,9 @@ def cmd_doctor() -> int:
 
     config = load_config()
     ok = True
-    print(f"Python: {sys.version.split()[0]}")
+    python_ok = sys.version_info >= (3, 12)
+    print(f"Python: {'OK' if python_ok else 'UNSUPPORTED'} ({sys.version.split()[0]})")
+    ok = ok and python_ok
     print(f"DDT_HOME: {config.ddt_home}")
     for name, path in [
         ("inbox", config.inbox_dir),
@@ -72,8 +66,18 @@ def cmd_doctor() -> int:
         ("benchmark", config.benchmark_dir),
     ]:
         exists = path.exists()
-        print(f"  {name}: {'OK' if exists else 'MISSING'} ({path})")
-        if not exists:
+        writable = exists and os.access(path, os.W_OK | os.X_OK)
+        state = "OK" if writable else ("NOT WRITABLE" if exists else "MISSING")
+        print(f"  {name}: {state} ({path})")
+        if not writable:
+            ok = False
+
+    for module in ("fitz", "openpyxl", "pydantic", "httpx", "filelock"):
+        try:
+            importlib.import_module(module)
+            print(f"Dependency {module}: OK")
+        except ImportError:
+            print(f"Dependency {module}: MISSING")
             ok = False
 
     client = OllamaClient(config)
@@ -96,7 +100,75 @@ def cmd_doctor() -> int:
         print(f"SQLite: FAIL ({exc})")
         ok = False
 
+    if config.output_dir.exists() and os.access(config.output_dir, os.W_OK | os.X_OK):
+        try:
+            with NamedTemporaryFile(dir=config.output_dir, prefix=".doctor_excel_", delete=True):
+                pass
+            print("Excel: OK")
+        except OSError as exc:
+            print(f"Excel: FAIL ({exc})")
+            ok = False
+    else:
+        print("Excel: FAIL (output directory unavailable)")
+        ok = False
+
     return 0 if ok else 1
+
+
+def cmd_run(args: argparse.Namespace) -> int:
+    if not args.once:
+        print("Only one-shot mode is supported; pass --once.", file=sys.stderr)
+        return 2
+    config = load_config()
+    configure_logging(config.log_level)
+    new_run_id()
+    summary = run_once(config)
+    if summary.locked:
+        print("Another job is already running; nothing processed.")
+    else:
+        print(
+            "Run complete: "
+            f"queued={summary.queued} processed={summary.processed} "
+            f"errors={summary.errors} duplicates={summary.duplicates}"
+        )
+    return summary.exit_code
+
+
+def cmd_export() -> int:
+    from ddt_local.excel import write_production_excel
+
+    config = load_config()
+    database = initialize_operational_home(config)
+    output = write_production_excel(database, config.excel_path)
+    print(f"Excel exported to {output}")
+    return 0
+
+
+def cmd_status() -> int:
+    from ddt_local.files import is_supported_file
+
+    config = load_config()
+    database = initialize_operational_home(config)
+    queued = sum(
+        1 for path in config.inbox_dir.iterdir() if path.is_file() and is_supported_file(path)
+    )
+    counts = database.production_status_counts()
+    print(f"Inbox queued: {queued}")
+    print(f"Processed: {counts.get('processed', 0)}")
+    print(f"Errors: {counts.get('error', 0)}")
+    print(f"Excel: {config.excel_path} ({'OK' if config.excel_path.exists() else 'MISSING'})")
+    return 0
+
+
+def cmd_reprocess(args: argparse.Namespace) -> int:
+    config = load_config()
+    try:
+        queued_path = requeue_document(config, args.file_hash)
+    except (ValueError, FileNotFoundError) as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+    print(f"Requeued {queued_path.name}")
+    return cmd_run(argparse.Namespace(once=True))
 
 
 def cmd_benchmark(args: argparse.Namespace) -> int:
@@ -143,6 +215,14 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_doctor()
     if args.command == "benchmark":
         return cmd_benchmark(args)
+    if args.command == "run":
+        return cmd_run(args)
+    if args.command == "export":
+        return cmd_export()
+    if args.command == "status":
+        return cmd_status()
+    if args.command == "reprocess":
+        return cmd_reprocess(args)
 
     print(f"Command '{args.command}' not yet implemented.", file=sys.stderr)
     return 1

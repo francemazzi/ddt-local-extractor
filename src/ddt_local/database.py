@@ -184,6 +184,19 @@ class Database:
             ).fetchone()
             return row is not None
 
+    def source_document_by_hash(self, sha256: str) -> sqlite3.Row | None:
+        """Return a production source record, if it exists."""
+        with self.connect() as conn:
+            return conn.execute(
+                "SELECT * FROM source_documents WHERE sha256 = ?", (sha256,)
+            ).fetchone()
+
+    def delete_source_document_by_hash(self, sha256: str) -> bool:
+        """Delete one source record and all of its dependent production records."""
+        with self.transaction() as conn:
+            cursor = conn.execute("DELETE FROM source_documents WHERE sha256 = ?", (sha256,))
+        return cursor.rowcount > 0
+
     def insert_source_document(
         self,
         conn: sqlite3.Connection,
@@ -592,6 +605,14 @@ class Database:
                 ORDER BY h.quality_score, h.data_ddt, h.id
                 """
             ).fetchall()
+
+    def production_status_counts(self) -> dict[str, int]:
+        """Count source documents by status for the ``status`` CLI command."""
+        with self.connect() as conn:
+            rows = conn.execute(
+                "SELECT status, COUNT(*) AS count FROM source_documents GROUP BY status"
+            ).fetchall()
+        return {str(row["status"]): int(row["count"]) for row in rows}
 
 
 def _header_data_from_document(data: dict[str, Any], *, raw_json: str | None) -> dict[str, Any]:
