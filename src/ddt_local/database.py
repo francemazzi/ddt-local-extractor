@@ -11,6 +11,8 @@ from decimal import Decimal
 from pathlib import Path
 from typing import Any, Generator, Iterator
 
+from ddt_local.models import ExtractionResult, SourceDocument
+
 SCHEMA_VERSION = "1"
 
 
@@ -193,13 +195,16 @@ class Database:
         pipeline: str | None = None,
         ocr_model: str | None = None,
         struct_model: str | None = None,
+        page_count: int = 0,
+        extraction_method: str | None = None,
     ) -> int:
         cursor = conn.execute(
             """
             INSERT INTO source_documents (
                 sha256, original_filename, size_bytes, status, started_at,
-                pipeline, ocr_model, struct_model, schema_version
-            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                pipeline, ocr_model, struct_model, page_count, extraction_method,
+                schema_version
+            ) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
             """,
             (
                 sha256,
@@ -210,10 +215,173 @@ class Database:
                 pipeline,
                 ocr_model,
                 struct_model,
+                page_count,
+                extraction_method,
                 SCHEMA_VERSION,
             ),
         )
         return int(cursor.lastrowid)
+
+    def insert_ocr_page(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        source_document_id: int,
+        page_number: int,
+        ocr_text: str | None,
+        table_text: str | None = None,
+        ocr_duration_seconds: float | None = None,
+        warning: str | None = None,
+    ) -> int:
+        cursor = conn.execute(
+            """
+            INSERT INTO ocr_pages (
+                source_document_id, page_number, ocr_text, table_text,
+                ocr_duration_seconds, warning
+            ) VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (
+                source_document_id,
+                page_number,
+                ocr_text,
+                table_text,
+                ocr_duration_seconds,
+                warning,
+            ),
+        )
+        return int(cursor.lastrowid)
+
+    def insert_validation_issue(
+        self,
+        conn: sqlite3.Connection,
+        *,
+        source_document_id: int,
+        field_path: str,
+        issue_type: str,
+        severity: str,
+        description: str | None = None,
+    ) -> int:
+        cursor = conn.execute(
+            """
+            INSERT INTO validation_issues (
+                source_document_id, field_path, issue_type, severity, description
+            ) VALUES (?, ?, ?, ?, ?)
+            """,
+            (source_document_id, field_path, issue_type, severity, description),
+        )
+        return int(cursor.lastrowid)
+
+    def persist_extraction_result(
+        self,
+        source: SourceDocument,
+        result: ExtractionResult,
+    ) -> int:
+        """Persist one production result atomically, including its artifacts and issues.
+
+        A successful extraction creates the header and line archive. A failed one is
+        retained as an ``error`` source document so it can be inspected or retried.
+        Any database exception rolls back the complete document record.
+        """
+        metadata = result.metadata
+        with self.transaction() as conn:
+            document_id = self.insert_source_document(
+                conn,
+                sha256=source.sha256,
+                original_filename=source.filename,
+                size_bytes=source.size_bytes,
+                status="processing",
+                pipeline=metadata.pipeline,
+                ocr_model=metadata.ocr_model,
+                struct_model=metadata.struct_model,
+                page_count=metadata.page_count or source.page_count,
+                extraction_method=str(metadata.extraction_method),
+            )
+
+            ocr_duration = sum(
+                timing.duration_seconds
+                for timing in metadata.phase_timings
+                if timing.phase == "ocr"
+            )
+            for page_number, ocr_text in enumerate(result.artifacts.ocr_text_by_page, start=1):
+                self.insert_ocr_page(
+                    conn,
+                    source_document_id=document_id,
+                    page_number=page_number,
+                    ocr_text=ocr_text,
+                    table_text=result.artifacts.table_markdown if page_number == 1 else None,
+                    ocr_duration_seconds=ocr_duration or None,
+                )
+
+            if result.success:
+                if result.document is None:
+                    raise ValueError("A successful extraction requires a DocumentoDDT")
+                header_data = _header_data_from_document(
+                    result.document.model_dump(mode="json"),
+                    raw_json=result.artifacts.raw_json_response,
+                )
+                self.insert_ddt_header(
+                    conn,
+                    source_document_id=document_id,
+                    header_data=header_data,
+                )
+                self.insert_ddt_lines(
+                    conn,
+                    source_document_id=document_id,
+                    lines=_line_data_from_document(result.document.model_dump(mode="json")),
+                )
+                for field_path in result.document.campi_da_verificare:
+                    self.insert_validation_issue(
+                        conn,
+                        source_document_id=document_id,
+                        field_path=field_path,
+                        issue_type="quality_flag",
+                        severity="warning",
+                    )
+                for warning in result.document.warning:
+                    self.insert_validation_issue(
+                        conn,
+                        source_document_id=document_id,
+                        field_path="document",
+                        issue_type="pipeline_warning",
+                        severity="warning",
+                        description=warning,
+                    )
+                status = "processed"
+                error_message = None
+            else:
+                status = "error"
+                error_message = result.error_message or "Extraction failed"
+                self.insert_validation_issue(
+                    conn,
+                    source_document_id=document_id,
+                    field_path="document",
+                    issue_type="extraction_error",
+                    severity="error",
+                    description=error_message,
+                )
+
+            conn.execute(
+                """
+                UPDATE source_documents
+                SET status = ?, page_count = ?, extraction_method = ?, pipeline = ?,
+                    ocr_model = ?, struct_model = ?, finished_at = ?,
+                    duration_seconds = ?, error_message = ?
+                WHERE id = ?
+                """,
+                (
+                    status,
+                    metadata.page_count or source.page_count,
+                    str(metadata.extraction_method),
+                    metadata.pipeline,
+                    metadata.ocr_model,
+                    metadata.struct_model,
+                    _utcnow(),
+                    metadata.total_duration_seconds,
+                    error_message,
+                    document_id,
+                ),
+            )
+        return document_id
 
     def insert_ddt_header(
         self,
@@ -368,3 +536,103 @@ class Database:
         with self.connect() as conn:
             row = conn.execute("SELECT COUNT(*) AS c FROM benchmark_results").fetchone()
             return int(row["c"])
+
+    def production_headers(self) -> list[sqlite3.Row]:
+        """Return persisted DDT headers in stable export order."""
+        with self.connect() as conn:
+            return conn.execute(
+                """
+                SELECT h.*, s.sha256, s.original_filename, s.finished_at
+                FROM ddt_headers AS h
+                JOIN source_documents AS s ON s.id = h.source_document_id
+                ORDER BY h.data_ddt, h.id
+                """
+            ).fetchall()
+
+    def production_lines(self) -> list[sqlite3.Row]:
+        """Return persisted DDT lines with their header context."""
+        with self.connect() as conn:
+            return conn.execute(
+                """
+                SELECT l.*, h.numero_ddt, h.data_ddt, h.source_filename
+                FROM ddt_lines AS l
+                JOIN ddt_headers AS h ON h.source_document_id = l.source_document_id
+                ORDER BY h.data_ddt, h.id, l.line_index, l.id
+                """
+            ).fetchall()
+
+    def production_errors(self) -> list[sqlite3.Row]:
+        """Return extraction failures and validation errors for the Excel archive."""
+        with self.connect() as conn:
+            return conn.execute(
+                """
+                SELECT s.original_filename, s.sha256, s.status, s.error_message,
+                       s.finished_at, v.field_path, v.issue_type, v.severity,
+                       v.description
+                FROM source_documents AS s
+                LEFT JOIN validation_issues AS v ON v.source_document_id = s.id
+                WHERE s.status = 'error' OR v.severity = 'error'
+                ORDER BY s.finished_at, s.id, v.id
+                """
+            ).fetchall()
+
+    def production_review_items(self) -> list[sqlite3.Row]:
+        """Return headers requiring human review, with their recorded flags."""
+        with self.connect() as conn:
+            return conn.execute(
+                """
+                SELECT h.source_filename, h.numero_ddt, h.data_ddt,
+                       h.quality_score, h.requires_review,
+                       GROUP_CONCAT(v.field_path || ': ' || COALESCE(v.description, v.issue_type), '\n')
+                           AS issues
+                FROM ddt_headers AS h
+                LEFT JOIN validation_issues AS v ON v.source_document_id = h.source_document_id
+                WHERE h.requires_review = 1
+                GROUP BY h.id
+                ORDER BY h.quality_score, h.data_ddt, h.id
+                """
+            ).fetchall()
+
+
+def _header_data_from_document(data: dict[str, Any], *, raw_json: str | None) -> dict[str, Any]:
+    document = data.get("documento", {})
+    supplier = data.get("fornitore", {})
+    recipient = data.get("destinatario", {})
+    return {
+        "source_filename": data.get("source_filename"),
+        "numero_ddt": document.get("numero_ddt"),
+        "data_ddt": document.get("data_ddt"),
+        "riferimento_ordine": document.get("riferimento_ordine"),
+        "causale_trasporto": document.get("causale_trasporto"),
+        "numero_colli": document.get("numero_colli"),
+        "peso_lordo": document.get("peso_lordo"),
+        "peso_netto": document.get("peso_netto"),
+        "vettore": document.get("vettore"),
+        "destinazione": document.get("destinazione"),
+        "fornitore_ragione_sociale": supplier.get("ragione_sociale"),
+        "fornitore_partita_iva": supplier.get("partita_iva"),
+        "fornitore_indirizzo": supplier.get("indirizzo"),
+        "destinatario_ragione_sociale": recipient.get("ragione_sociale"),
+        "destinatario_partita_iva": recipient.get("partita_iva"),
+        "destinatario_indirizzo": recipient.get("indirizzo"),
+        "quality_score": data.get("quality_score", 0),
+        "requires_review": bool(data.get("campi_da_verificare")) or data.get("quality_score", 0) < 0.85,
+        "raw_json": raw_json or json.dumps(data, default=_json_default, ensure_ascii=False),
+    }
+
+
+def _line_data_from_document(data: dict[str, Any]) -> list[dict[str, Any]]:
+    lines: list[dict[str, Any]] = []
+    for index, line in enumerate(data.get("articoli", []), start=1):
+        lines.append(
+            {
+                "line_index": line.get("numero_riga") or index,
+                "codice": line.get("codice"),
+                "descrizione": line.get("descrizione"),
+                "quantita": line.get("quantita"),
+                "unita_misura": line.get("unita_misura"),
+                "lotto": line.get("lotto"),
+                "matricola": line.get("matricola"),
+            }
+        )
+    return lines

@@ -336,14 +336,14 @@ pytest tests/ -m ollama
 
 ## Fase 8 — Export Excel e persistenza produzione
 
-- [ ] **Fase 8 completata**
+- [x] **Fase 8 completata**
 
 **Obiettivo:** output utente e archivio completo.
 
 ### Checklist deliverable
 
-- [ ] `src/ddt_local/excel.py` — fogli `DDT`, `Righe`, `Errori`, `Da verificare`; scrittura atomica; protezione formula injection
-- [ ] Integrazione extractor → DB → Excel nel flusso di run
+- [x] `src/ddt_local/excel.py` — fogli `DDT`, `Righe`, `Errori`, `Da verificare`; scrittura atomica; protezione formula injection
+- [x] Integrazione extractor → DB → Excel nel flusso di run
 
 ### Gate
 
@@ -489,11 +489,11 @@ Aggiornare a `[x]` solo dopo verifica reale (mappatura alle fasi indicative).
 - [ ] 3. PDF digitale elaborato senza OCR visuale quando possibile — *F6 / F7*
 - [ ] 4. PDF scansionato elaborato tramite GLM-OCR — *F6 / F7*
 - [ ] 5. Risultato validato con Pydantic — *F7*
-- [ ] 6. SQLite: intestazione, pagine OCR, righe, problemi — *F3 / F8*
-- [ ] 7. Excel con fogli richiesti — *F8*
+- [x] 6. SQLite: intestazione, pagine OCR, righe, problemi — *F3 / F8*
+- [x] 7. Excel con fogli richiesti — *F8*
 - [ ] 8. Documento duplicato non rielaborato in produzione — *F4 / F9*
 - [ ] 9. Due job simultanei non elaborano lo stesso file — *F4 / F9*
-- [ ] 10. Errore non lascia il DB in stato parziale — *F3 / F8*
+- [x] 10. Errore non lascia il DB in stato parziale — *F3 / F8*
 - [ ] 11. Documento spostato in `processed` o `errors` — *F4 / F9*
 - [ ] 12. Job termina dopo aver svuotato la coda — *F9*
 - [x] 13. `benchmark` esegue ≥ 2 config sugli esempi e produce CSV, Excel, classifica — *F10*
@@ -545,6 +545,7 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | 2026-07-15 | 6 | PASS (74) | PASS (12) | N/A | pdf.py, ocr.py, GLM-OCR su scansione 08 |
 | 2026-07-15 | 7 | PASS | PASS | N/A | ocr_struct/vision/native; ocr_struct su doc 01 OK |
 | 2026-07-15 | 10 | PASS | PASS | PASS | 10 doc × 5 config; rank: ocr_qwen4b 0.77 |
+| 2026-07-18 | 8 | PASS (108) | N/A | N/A | Persistenza produzione transazionale; Excel atomico con 4 fogli e anti-formula injection |
 
 ---
 
