@@ -426,17 +426,17 @@ python -m ddt_local benchmark \
 
 ## Fase 11 — Script multipiattaforma e scheduling
 
-- [ ] **Fase 11 completata**
+- [x] **Fase 11 completata**
 
 **Obiettivo:** esecuzione via launchd, Task Scheduler, terminale.
 
 ### Checklist deliverable
 
-- [ ] `scripts/run_macos.sh`
-- [ ] `scripts/run_windows.cmd`
-- [ ] `scripts/install_launchd.sh`
-- [ ] `scripts/install_task_scheduler.ps1`
-- [ ] `scripts/pull_models.sh`
+- [x] `scripts/run_macos.sh`
+- [x] `scripts/run_windows.cmd`
+- [x] `scripts/install_launchd.sh`
+- [x] `scripts/install_task_scheduler.ps1`
+- [x] `scripts/pull_models.sh`
 
 ### Gate
 
@@ -547,6 +547,7 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | 2026-07-15 | 10 | PASS | PASS | PASS | 10 doc × 5 config; rank: ocr_qwen4b 0.77 |
 | 2026-07-18 | 8 | PASS (108) | N/A | N/A | Persistenza produzione transazionale; Excel atomico con 4 fogli e anti-formula injection |
 | 2026-07-18 | 9 | PASS (116) | PASS (15) | N/A | CLI completa; run reale su 01 nativo + 08 scansione → SQLite, Excel e 2 PDF archiviati |
+| 2026-07-18 | 11 | PASS (123) | N/A | N/A | Wrapper macOS eseguito; plist launchd validato in dry-run; script PowerShell validato dal parser |
 
 ---
 
