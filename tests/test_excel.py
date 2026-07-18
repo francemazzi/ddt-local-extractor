@@ -63,7 +63,11 @@ def _success_result(*, requires_review: bool = True) -> ExtractionResult:
             extraction_method=ExtractionMethod.NATIVE_TEXT,
             total_duration_seconds=1.5,
         ),
-        artifacts=ExtractionArtifacts(raw_json_response='{"safe": true}'),
+        artifacts=ExtractionArtifacts(
+            ocr_text_by_page=["OCR content for persistence"],
+            table_markdown="| codice | quantità |\n| --- | --- |\n| ART-1 | 4.5 |",
+            raw_json_response='{"safe": true}',
+        ),
         success=True,
     )
 
@@ -126,6 +130,18 @@ def test_persistence_rolls_back_everything_when_line_insert_fails(
 
     assert database.document_exists_by_hash(source.sha256) is False
     assert database.count_production_documents() == 0
+
+
+def test_persistence_archives_ocr_pages_lines_and_validation_issues(
+    database: Database, tmp_path: Path
+):
+    database.persist_extraction_result(_source(tmp_path), _success_result())
+
+    with database.connect() as conn:
+        assert conn.execute("SELECT COUNT(*) FROM ddt_headers").fetchone()[0] == 1
+        assert conn.execute("SELECT COUNT(*) FROM ddt_lines").fetchone()[0] == 1
+        assert conn.execute("SELECT COUNT(*) FROM ocr_pages").fetchone()[0] == 1
+        assert conn.execute("SELECT COUNT(*) FROM validation_issues").fetchone()[0] == 1
 
 
 @pytest.mark.parametrize("value", ["=1+1", "+1", "-1", "@formula"])

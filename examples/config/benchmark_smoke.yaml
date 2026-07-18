@@ -1,0 +1,16 @@
+# Smoke benchmark: native, scanned and edge-case document with two strategies.
+runs:
+  - name: ocr_qwen4b
+    pipeline: ocr_struct
+    ocr_model: glm-ocr:latest
+    struct_model: qwen3.5:4b
+    render_dpi: 250
+  - name: native_only_baseline
+    pipeline: native_only
+    struct_model: qwen3.5:4b
+    render_dpi: 250
+documents_filter:
+  - 01_DDT_Acciai_Nordest.pdf
+  - 08_DDT_Inox_Labirinto_scansione.pdf
+  - 09_DDT_Lamiere_Aurora.pdf
+repetitions: 1
