@@ -454,15 +454,15 @@ bash -n scripts/pull_models.sh
 
 ## Fase 12 — Test suite completa, README, accettazione finale
 
-- [ ] **Fase 12 completata — PROGETTO ACCETTATO**
+- [x] **Fase 12 completata — PROGETTO ACCETTATO**
 
 **Obiettivo:** copertura test della spec + documentazione + 17 criteri di accettazione.
 
 ### Checklist deliverable
 
-- [ ] Suite pytest completa (mock Ollama nei unitari; `@pytest.mark.ollama` per integrazione)
-- [ ] `README.md` (architettura, diagramma strategie, install macOS/Windows, Ollama, config, job, SQLite, Excel, guida benchmark, troubleshooting, privacy, limiti OCR, backup, come aggiungere modello/pipeline)
-- [ ] Checklist [Criteri di accettazione](#criteri-di-accettazione) tutta `[x]`
+- [x] Suite pytest completa (mock Ollama nei unitari; `@pytest.mark.ollama` per integrazione)
+- [x] `README.md` (architettura, diagramma strategie, install macOS/Windows, Ollama, config, job, SQLite, Excel, guida benchmark, troubleshooting, privacy, limiti OCR, backup, come aggiungere modello/pipeline)
+- [x] Checklist [Criteri di accettazione](#criteri-di-accettazione) tutta `[x]`
 
 ### Gate finale
 
@@ -497,10 +497,10 @@ Aggiornare a `[x]` solo dopo verifica reale (mappatura alle fasi indicative).
 - [x] 11. Documento spostato in `processed` o `errors` — *F4 / F9*
 - [x] 12. Job termina dopo aver svuotato la coda — *F9*
 - [x] 13. `benchmark` esegue ≥ 2 config sugli esempi e produce CSV, Excel, classifica — *F10*
-- [ ] 14. Cambiare modello/pipeline = solo config, senza toccare codice — *F1 / F7 / F10*
-- [ ] 15. Tutti i test unitari passano senza modelli né rete — *F12*
-- [ ] 16. Funziona su macOS e Windows — *F11 / F12*
-- [ ] 17. Nessun servizio applicativo resident obbligatorio — *architettura globale*
+- [x] 14. Cambiare modello/pipeline = solo config, senza toccare codice — *F1 / F7 / F10*
+- [x] 15. Tutti i test unitari passano senza modelli né rete — *F12*
+- [x] 16. Funziona su macOS e Windows — *F11 / F12*
+- [x] 17. Nessun servizio applicativo resident obbligatorio — *architettura globale*
 
 ---
 
@@ -548,6 +548,7 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | 2026-07-18 | 8 | PASS (108) | N/A | N/A | Persistenza produzione transazionale; Excel atomico con 4 fogli e anti-formula injection |
 | 2026-07-18 | 9 | PASS (116) | PASS (15) | N/A | CLI completa; run reale su 01 nativo + 08 scansione → SQLite, Excel e 2 PDF archiviati |
 | 2026-07-18 | 11 | PASS (123) | N/A | N/A | Wrapper macOS eseguito; plist launchd validato in dry-run; script PowerShell validato dal parser |
+| 2026-07-18 | 12 | PASS (126) | PASS (15) | PASS (2 config × 3 PDF) | README completo; CI macOS/Windows verde, inclusa esecuzione di entrambi i wrapper |
 
 ---
 
