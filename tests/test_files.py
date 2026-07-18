@@ -44,7 +44,9 @@ def test_is_file_stable_detects_growth(tmp_path, monkeypatch):
     f.write_bytes(b"x")
 
     original_sleep = time.sleep
-    sizes = iter([1, 2])
+    # Change the size, not only the mtime: Windows file timestamps can have a
+    # coarser resolution than the immediate test interval.
+    sizes = iter([2])
 
     def fake_sleep(seconds):
         f.write_bytes(b"x" * next(sizes, 2))
