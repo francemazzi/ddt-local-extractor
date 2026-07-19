@@ -115,6 +115,7 @@ def test_packaging_scripts_define_unsigned_native_installers():
 def test_release_workflow_publishes_versioned_packages_for_each_desktop_platform():
     workflow = (PROJECT_ROOT / ".github" / "workflows" / "build-desktop.yml").read_text(encoding="utf-8")
     assert 'tags:\n      - "v*"' in workflow
+    assert "macos-15-intel" in workflow
     assert "macOS-Apple-Silicon" in workflow
     assert "macOS-Intel" in workflow
     assert "ddt-local-extractor-windows" in workflow
