@@ -107,6 +107,8 @@ def test_packaging_scripts_define_unsigned_native_installers():
     assert "--exclude-module nltk" in windows
     assert "ISCC.exe" in windows
     assert "DDT-Local-Extractor-{#MyAppVersion}-Setup" in inno
+    assert 'OutputDir=..\\dist\\installer' in inno
+    assert 'Source: "..\\dist\\DDT Local Extractor\\*"' in inno
     assert "UninstallDisplayIcon" in inno
 
 

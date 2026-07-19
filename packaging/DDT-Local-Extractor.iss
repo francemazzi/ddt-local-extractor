@@ -15,7 +15,7 @@ AppPublisher={#MyAppPublisher}
 DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
 PrivilegesRequired=lowest
-OutputDir=dist\installer
+OutputDir=..\dist\installer
 OutputBaseFilename=DDT-Local-Extractor-{#MyAppVersion}-Setup
 Compression=lzma
 SolidCompression=yes
@@ -23,7 +23,7 @@ WizardStyle=modern
 UninstallDisplayIcon={app}\{#MyAppExeName}
 
 [Files]
-Source: "dist\DDT Local Extractor\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
+Source: "..\dist\DDT Local Extractor\*"; DestDir: "{app}"; Flags: ignoreversion recursesubdirs createallsubdirs
 
 [Icons]
 Name: "{autoprograms}\{#MyAppName}"; Filename: "{app}\{#MyAppExeName}"
