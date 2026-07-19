@@ -11,4 +11,10 @@ if [[ ! -d "$APP_PATH" ]]; then
     exit 1
 fi
 
+# macOS marks every executable extracted from an internet ZIP as quarantined.
+# The user explicitly authorises this launcher once via Finder → ctrl-click →
+# Apri; after that, clear that download marker from this self-contained package
+# so later launches are plain double-clicks and the bundled app can open too.
+xattr -dr com.apple.quarantine "$SCRIPT_DIR" 2>/dev/null || true
+
 open "$APP_PATH"

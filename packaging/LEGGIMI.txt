@@ -5,7 +5,10 @@ DDT LOCAL EXTRACTOR 1.0.0
 2. Non spostare o rinominare i file all'interno della cartella estratta.
 3. Avvia l'app:
    - Windows: doppio clic su start.bat
-   - macOS: doppio clic su start.command
+   - macOS, SOLO LA PRIMA VOLTA:
+     1. tieni premuto Ctrl e fai clic su start.command;
+     2. scegli "Apri" dal menu, poi conferma "Apri" nella finestra Apple.
+     Dalla volta successiva basta il doppio clic su start.command.
      (start.sh e' disponibile anche da Terminale.)
 4. Al primo avvio scegli la cartella in cui lavorare con i DDT.
 

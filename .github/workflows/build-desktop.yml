@@ -170,7 +170,7 @@ jobs:
           body: |
             Release desktop di DDT Local Extractor.
 
-            Scarica lo ZIP adatto al tuo computer, estrailo e avvia `start.command` su macOS oppure `start.bat` su Windows. Al primo avvio l'app chiede la cartella di lavoro e guida l'installazione di Ollama e dei modelli necessari.
+            Scarica lo ZIP adatto al tuo computer, estrailo e avvia `start.command` su macOS oppure `start.bat` su Windows. Su macOS, solo la prima volta: ctrl-clic su `start.command` → Apri → Apri; in seguito basta il doppio clic. Al primo avvio l'app chiede la cartella di lavoro e guida l'installazione di Ollama e dei modelli necessari.
 
             I PDF, il database e l'Excel restano sul computer.
           files: release-assets/*

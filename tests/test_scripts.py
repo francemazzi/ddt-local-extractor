@@ -104,6 +104,8 @@ def test_packaging_scripts_define_portable_desktop_archives():
     assert "codesign --force --deep --sign -" in macos
     assert "ditto -c -k" in macos
     assert "start.command" in macos
+    launcher = (PROJECT_ROOT / "packaging" / "start.command").read_text(encoding="utf-8")
+    assert 'xattr -dr com.apple.quarantine "$SCRIPT_DIR"' in launcher
     assert "PyInstaller" in windows
     assert "--exclude-module nltk" in windows
     assert "Compress-Archive" in windows
@@ -139,3 +141,5 @@ def test_pages_workflow_deploys_the_download_landing_page():
     assert "DDT-Local-Extractor-1.0.0-Windows-x64.zip" in page
     assert "start.command" in page
     assert "start.bat" in page
+    assert "MAC / PRIMA APERTURA" in page
+    assert "Ctrl" in page

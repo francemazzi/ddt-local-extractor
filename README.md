@@ -9,12 +9,12 @@ Supporta PDF con testo nativo, PDF scansiti e immagini (`.jpg`, `.jpeg`, `.png`,
 L'utente finale non deve usare il Terminale né impostare `DDT_HOME`.
 
 1. Apri la [pagina di download](https://francemazzi.github.io/ddt-local-extractor/) e scarica lo ZIP per il tuo computer: macOS Apple Silicon, macOS Intel o Windows x64. I file sono pubblicati anche nelle [GitHub Releases](https://github.com/francemazzi/ddt-local-extractor/releases).
-2. Estrai completamente lo ZIP, senza spostare i file al suo interno. Su Windows fai doppio clic su **`start.bat`**; su Mac fai doppio clic su **`start.command`** (`start.sh` è disponibile anche da Terminale).
+2. Estrai completamente lo ZIP, senza spostare i file al suo interno. Su Windows fai doppio clic su **`start.bat`**. Su Mac, **solo la prima volta**, tieni premuto `Ctrl`, fai clic su **`start.command`**, scegli **Apri** e conferma **Apri**; dalle volte successive basterà il doppio clic (`start.sh` è disponibile anche da Terminale).
 3. Al primo avvio l'app apre il selettore cartella nativo: scegli la cartella DDT esatta, per esempio `Documenti/DDT`.
 4. L'app crea automaticamente `inbox`, `processed`, `errors`, `output` e il database; controlla Ollama e guida al download dei due modelli richiesti.
 5. Trascina i PDF in `inbox`. L'app li elabora automaticamente entro cinque minuti; la dashboard permette anche **Elabora ora**, **Apri inbox** e **Apri Excel**.
 
-La release stabile corrente è **v1.0.0**. Verifica sempre che lo ZIP provenga dalla release ufficiale. Se il sistema chiede una conferma al primo avvio, scegli **Apri** solo dopo questa verifica.
+La release stabile corrente è **v1.0.0**. Verifica sempre che lo ZIP provenga dalla release ufficiale. Su macOS il primo avvio richiede `Ctrl` + clic su `start.command` → **Apri**; l'avviatore poi abilita i normali doppi clic successivi.
 
 ## Architettura
 
