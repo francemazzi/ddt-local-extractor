@@ -13,6 +13,7 @@ from ddt_local.config import load_config
 from ddt_local.database import Database
 from ddt_local.logging_config import configure_logging, get_logger, new_run_id
 from ddt_local.production import initialize_operational_home, requeue_document, run_once
+from ddt_local.scheduler import DEFAULT_INTERVAL_SECONDS, SchedulerError, install_scheduler, remove_scheduler
 
 
 def build_parser() -> argparse.ArgumentParser:
@@ -30,6 +31,18 @@ def build_parser() -> argparse.ArgumentParser:
     subparsers.add_parser("status", help="Show processing status")
     reprocess_parser = subparsers.add_parser("reprocess", help="Reprocess a document by hash")
     reprocess_parser.add_argument("file_hash", help="SHA-256 hash of the document")
+    scheduler_parser = subparsers.add_parser(
+        "scheduler", help="Install or remove the advanced per-user automatic job"
+    )
+    scheduler_actions = scheduler_parser.add_subparsers(dest="scheduler_action", required=True)
+    scheduler_install = scheduler_actions.add_parser("install", help="Install the automatic job")
+    scheduler_install.add_argument(
+        "--interval-minutes",
+        type=int,
+        default=DEFAULT_INTERVAL_SECONDS // 60,
+        help="Inbox polling interval (default: 5)",
+    )
+    scheduler_actions.add_parser("remove", help="Remove the automatic job")
     benchmark_parser = subparsers.add_parser("benchmark", help="Run pipeline benchmark")
     benchmark_parser.add_argument("--documents", required=True, help="Path to document folder")
     benchmark_parser.add_argument("--ground-truth", required=True, help="Path to ground truth folder")
@@ -171,6 +184,36 @@ def cmd_reprocess(args: argparse.Namespace) -> int:
     return cmd_run(argparse.Namespace(once=True))
 
 
+def cmd_scheduler(args: argparse.Namespace) -> int:
+    from ddt_local.scheduler import default_runner_command
+
+    config = load_config()
+    if args.scheduler_action == "remove":
+        try:
+            remove_scheduler()
+        except SchedulerError as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
+        print("Automatic job removed.")
+        return 0
+
+    interval_seconds = args.interval_minutes * 60
+    try:
+        initialize_operational_home(config)
+        location = install_scheduler(
+            command=default_runner_command(),
+            ddt_home=config.ddt_home,
+            interval_seconds=interval_seconds,
+        )
+    except (SchedulerError, OSError) as exc:
+        print(str(exc), file=sys.stderr)
+        return 1
+    print(f"Automatic job installed every {args.interval_minutes} minutes.")
+    if location is not None:
+        print(f"Schedule: {location}")
+    return 0
+
+
 def cmd_benchmark(args: argparse.Namespace) -> int:
     from ddt_local.benchmark.report import format_ranking_text, write_reports
     from ddt_local.benchmark.runner import run_benchmark
@@ -223,6 +266,8 @@ def main(argv: list[str] | None = None) -> int:
         return cmd_status()
     if args.command == "reprocess":
         return cmd_reprocess(args)
+    if args.command == "scheduler":
+        return cmd_scheduler(args)
 
     print(f"Command '{args.command}' not yet implemented.", file=sys.stderr)
     return 1

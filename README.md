@@ -4,6 +4,18 @@ Applicazione locale per estrarre dati da Documenti di Trasporto italiani (DDT), 
 
 Supporta PDF con testo nativo, PDF scansiti e immagini (`.jpg`, `.jpeg`, `.png`, `.webp`). Il dataset incluso contiene esclusivamente documenti fac-simile.
 
+## App desktop — percorso consigliato
+
+L'utente finale non deve usare il Terminale né impostare `DDT_HOME`.
+
+1. Scarica l'installatore per macOS (`.dmg`) o Windows (`.exe`) dalle [GitHub Releases](https://github.com/francemazzi/ddt-local-extractor/releases).
+2. Installa e apri **DDT Local Extractor** dal Finder, dal menu Start o dal collegamento Desktop.
+3. Al primo avvio l'app mostra il selettore cartella nativo: scegli la cartella DDT esatta, per esempio `Documenti/DDT`.
+4. L'app crea automaticamente `inbox`, `processed`, `errors`, `output` e il database; controlla Ollama e guida al download dei due modelli richiesti.
+5. Trascina i PDF in `inbox`. L'app li elabora automaticamente entro cinque minuti; la dashboard permette anche **Elabora ora**, **Apri inbox** e **Apri Excel**.
+
+Gli installatori iniziali non sono firmati. Su macOS potrebbe essere necessario usare Finder → tasto destro sull'app → **Apri** una sola volta; su Windows confermare **Ulteriori informazioni → Esegui comunque** dopo aver verificato che il download provenga dalla release ufficiale. La firma Apple/Windows sarà aggiunta in una release successiva.
+
 ## Architettura
 
 ```mermaid
@@ -31,7 +43,9 @@ La strategia predefinita è `ocr_struct`: usa il testo nativo quando è sufficie
 - Ollama avviato in locale
 - Modelli: `glm-ocr:latest`, `qwen3.5:4b`; `qwen3.5:9b` è incluso nel benchmark standard
 
-## Installazione macOS
+## Installazione tecnica macOS
+
+Questa sezione è per sviluppatori, assistenza tecnica o esecuzione da repository. Per gli utenti finali usare l'app desktop sopra.
 
 ```bash
 git clone https://github.com/francemazzi/ddt-local-extractor.git
@@ -51,7 +65,7 @@ Per una singola esecuzione si può usare anche il wrapper:
 
 Il wrapper usa `.venv/bin/python`; per usare un interprete diverso impostare `DDT_PYTHON=/percorso/python`.
 
-## Installazione Windows
+## Installazione tecnica Windows
 
 In PowerShell:
 
@@ -77,7 +91,12 @@ Il wrapper Windows è [`scripts/run_windows.cmd`](scripts/run_windows.cmd) e pu�
 
 ## Configurazione
 
-La configurazione è tutta in variabili d’ambiente: copiare `.env.example` come riferimento o impostarle nel sistema. Di default l’area operativa è `~/DDT` su macOS/Linux e `%USERPROFILE%\DDT` tramite il wrapper Windows.
+La configurazione avanzata è in variabili d’ambiente: copiare `.env.example` come riferimento o impostarle nel sistema. L'app desktop salva invece la scelta dell'utente senza richiedere variabili:
+
+- macOS: `~/Library/Application Support/DDT Local Extractor/config.json`
+- Windows: `%APPDATA%\DDT Local Extractor\config.json`
+
+Se presente, la cartella salvata dall'app viene usata da CLI, runner e scheduler. `DDT_HOME` esplicita mantiene la precedenza per assistenza tecnica, test e automazioni.
 
 | Variabile | Default | Scopo |
 |---|---|---|
@@ -189,6 +208,8 @@ Windows (Task Scheduler, ogni 5 minuti):
 
 Entrambi gli scheduler eseguono un comando one-shot `run --once`; non esiste un servizio applicativo Python residente obbligatorio.
 
+Nell'app desktop lo scheduler viene attivato dal wizard e richiama un runner invisibile ogni cinque minuti. Gli script in questa sezione restano strumenti tecnici; usano lo stesso backend dello scheduler grafico.
+
 ## Aggiungere un modello o una pipeline
 
 Per provare un modello compatibile, installarlo con `ollama pull nome-modello`, impostare la relativa variabile `DDT_*_MODEL` e aggiungere una configurazione in `examples/config/benchmark.yaml`.
@@ -223,3 +244,16 @@ python -m ddt_local doctor
 ```
 
 Lo stato dettagliato delle fasi e i criteri di accettazione sono in [roadmap.md](roadmap.md).
+
+## Build degli installatori
+
+Le build sono prodotte nativamente dalla workflow GitHub **Build desktop installers**: su macOS genera un DMG, su Windows un installer Inno Setup. Per una build locale di sviluppo servono PyInstaller, Tcl/Tk e gli strumenti di packaging del sistema:
+
+```bash
+brew install python@3.12 python-tk@3.12
+PYTHON_BIN="$(brew --prefix python@3.12)/bin/python3.12"
+"$PYTHON_BIN" -m pip install -e ".[dev]"
+PYTHON_BIN="$PYTHON_BIN" bash scripts/build_macos.sh
+```
+
+Su Windows eseguire `scripts\build_windows.ps1` da PowerShell dopo avere installato Inno Setup 6. Le build restano unsigned finché non saranno disponibili certificati Apple e Windows.

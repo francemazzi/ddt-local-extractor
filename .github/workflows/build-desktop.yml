@@ -1,0 +1,86 @@
+name: Build desktop installers
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "desktop-v*"
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Homebrew Python with Tcl/Tk
+        run: |
+          brew install python@3.12 python-tk@3.12
+          echo "PYTHON_BIN=$(brew --prefix python@3.12)/bin/python3.12" >> "$GITHUB_ENV"
+      - name: Install build dependencies
+        run: |
+          "$PYTHON_BIN" -m pip install -e ".[dev]"
+      - name: Run desktop unit and scheduler tests
+        run: |
+          "$PYTHON_BIN" -m pytest tests/ -m "not ollama"
+      - name: Build unsigned DMG
+        run: |
+          VERSION=${GITHUB_REF_NAME#desktop-v}
+          if [ "$VERSION" = "$GITHUB_REF_NAME" ]; then VERSION=0.1.0; fi
+          VERSION="$VERSION" PYTHON_BIN="$PYTHON_BIN" bash scripts/build_macos.sh
+      - name: Smoke test packaged headless runner
+        run: |
+          smoke_root="$(mktemp -d)"
+          export DDT_USER_CONFIG="$smoke_root/settings.json"
+          export DDT_SMOKE_HOME="$smoke_root/DDT"
+          "$PYTHON_BIN" - <<'PY'
+          import os
+          from pathlib import Path
+          from ddt_local.user_config import UserSettings, save_user_settings
+
+          save_user_settings(
+              UserSettings(ddt_home=Path(os.environ["DDT_SMOKE_HOME"]), setup_completed=True),
+              Path(os.environ["DDT_USER_CONFIG"]),
+          )
+          PY
+          ./dist/ddt-local-runner --run-once
+          test -f "$DDT_SMOKE_HOME/data/ddt.sqlite3"
+          test -f "$DDT_SMOKE_HOME/output/DDT_estratti.xlsx"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ddt-local-extractor-macos
+          path: dist/*.dmg
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install build dependencies and Inno Setup
+        shell: pwsh
+        run: |
+          python -m pip install -e ".[dev]"
+          choco install innosetup --no-progress --yes
+      - name: Run desktop unit and scheduler tests
+        shell: pwsh
+        run: python -m pytest tests/ -m "not ollama"
+      - name: Build unsigned EXE installer
+        shell: pwsh
+        run: |
+          $version = $env:GITHUB_REF_NAME.Replace("desktop-v", "")
+          if ($version -eq $env:GITHUB_REF_NAME) { $version = "0.1.0" }
+          .\scripts\build_windows.ps1 -Version $version
+      - name: Smoke test packaged headless runner
+        shell: pwsh
+        run: |
+          $smokeRoot = Join-Path $env:RUNNER_TEMP "ddt-desktop-smoke"
+          $env:DDT_USER_CONFIG = Join-Path $smokeRoot "settings.json"
+          $env:DDT_SMOKE_HOME = Join-Path $smokeRoot "DDT"
+          python -c "import os; from pathlib import Path; from ddt_local.user_config import UserSettings, save_user_settings; save_user_settings(UserSettings(ddt_home=Path(os.environ['DDT_SMOKE_HOME']), setup_completed=True), Path(os.environ['DDT_USER_CONFIG']))"
+          & ".\dist\DDT Local Extractor\ddt-local-runner.exe" --run-once
+          if (-not (Test-Path (Join-Path $env:DDT_SMOKE_HOME "data\ddt.sqlite3"))) { throw "SQLite not created" }
+          if (-not (Test-Path (Join-Path $env:DDT_SMOKE_HOME "output\DDT_estratti.xlsx"))) { throw "Excel not created" }
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ddt-local-extractor-windows
+          path: dist/installer/*.exe

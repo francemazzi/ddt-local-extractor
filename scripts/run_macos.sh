@@ -6,7 +6,6 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 PYTHON_BIN="${DDT_PYTHON:-$PROJECT_DIR/.venv/bin/python}"
-export DDT_HOME="${DDT_HOME:-$HOME/DDT}"
 
 if [[ ! -x "$PYTHON_BIN" ]]; then
     echo "Python environment not found at $PYTHON_BIN." >&2

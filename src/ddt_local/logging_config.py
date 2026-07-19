@@ -6,6 +6,7 @@ import logging
 import sys
 import uuid
 from contextvars import ContextVar
+from pathlib import Path
 from typing import Any
 
 _run_id_var: ContextVar[str] = ContextVar("run_id", default="")
@@ -71,13 +72,25 @@ def _is_safe_log_value(key: str, value: Any) -> bool:
     return True
 
 
-def configure_logging(level: str = "INFO") -> None:
-    """Configure root logger with structured formatter."""
+def configure_logging(
+    level: str = "INFO",
+    *,
+    log_path: Path | None = None,
+    console: bool = True,
+) -> None:
+    """Configure structured logging for CLI or an invisible desktop runner."""
     root = logging.getLogger()
     root.handlers.clear()
-    handler = logging.StreamHandler(sys.stderr)
-    handler.setFormatter(StructuredFormatter())
-    root.addHandler(handler)
+    formatter = StructuredFormatter()
+    if console:
+        handler = logging.StreamHandler(sys.stderr)
+        handler.setFormatter(formatter)
+        root.addHandler(handler)
+    if log_path is not None:
+        log_path.parent.mkdir(parents=True, exist_ok=True)
+        handler = logging.FileHandler(log_path, encoding="utf-8")
+        handler.setFormatter(formatter)
+        root.addHandler(handler)
     root.setLevel(getattr(logging, level.upper(), logging.INFO))
 
 

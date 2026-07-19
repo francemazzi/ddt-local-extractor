@@ -40,3 +40,13 @@ def test_reprocess_unknown_hash_returns_error(app_config, monkeypatch: pytest.Mo
     monkeypatch.setenv("DDT_HOME", str(app_config.ddt_home))
     assert main(["reprocess", "f" * 64]) == 1
     assert "No source document found" in capsys.readouterr().err
+
+
+def test_scheduler_cli_installs_headless_job(app_config, monkeypatch: pytest.MonkeyPatch, capsys):
+    monkeypatch.setenv("DDT_HOME", str(app_config.ddt_home))
+    with patch("ddt_local.cli.install_scheduler", return_value=app_config.ddt_home / "agent.plist") as install:
+        assert main(["scheduler", "install"]) == 0
+
+    assert install.call_args.kwargs["interval_seconds"] == 300
+    assert install.call_args.kwargs["ddt_home"] == app_config.ddt_home
+    assert "Automatic job installed" in capsys.readouterr().out

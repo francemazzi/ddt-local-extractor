@@ -6,6 +6,8 @@ import os
 from dataclasses import dataclass
 from pathlib import Path
 
+from ddt_local.user_config import load_user_settings
+
 
 def _expand_path(value: str) -> Path:
     return Path(value).expanduser().resolve()
@@ -108,8 +110,12 @@ class AppConfig:
 
 def load_config() -> AppConfig:
     """Load configuration from environment with spec defaults."""
+    user_settings = load_user_settings()
+    configured_home = str(user_settings.ddt_home) if user_settings else "~/DDT"
     return AppConfig(
-        ddt_home=_expand_path(os.getenv("DDT_HOME", "~/DDT")),
+        # DDT_HOME is kept as an explicit advanced override for scripts, tests and
+        # support workflows. Desktop users normally get their persisted selection.
+        ddt_home=_expand_path(os.getenv("DDT_HOME", configured_home)),
         ollama_base_url=os.getenv("OLLAMA_BASE_URL", "http://localhost:11434").rstrip("/"),
         pipeline=os.getenv("DDT_PIPELINE", "ocr_struct"),
         ocr_model=os.getenv("DDT_OCR_MODEL", "glm-ocr:latest"),

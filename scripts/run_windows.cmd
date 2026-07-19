@@ -11,8 +11,6 @@ if defined DDT_PYTHON (
     set "PYTHON_BIN=%PROJECT_DIR%\.venv\Scripts\python.exe"
 )
 
-if not defined DDT_HOME set "DDT_HOME=%USERPROFILE%\DDT"
-
 if not exist "%PYTHON_BIN%" (
     echo Python environment not found at "%PYTHON_BIN%". 1>&2
     echo Create it first: py -3.12 -m venv .venv ^&^& .venv\Scripts\pip install -e ".[dev]" 1>&2
