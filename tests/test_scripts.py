@@ -117,6 +117,8 @@ def test_release_workflow_publishes_versioned_packages_for_each_desktop_platform
     assert "macOS-Intel" in workflow
     assert "ddt-local-extractor-windows" in workflow
     assert "softprops/action-gh-release@v3" in workflow
+    assert '"$PYTHON_BIN" -m venv .build-venv' in workflow
+    assert '"$BUILD_PYTHON" -m pip install -e ".[dev]"' in workflow
 
 
 def test_pages_workflow_deploys_the_download_landing_page():

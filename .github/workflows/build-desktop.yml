@@ -47,24 +47,29 @@ jobs:
         run: |
           brew install python@3.12 python-tk@3.12
           echo "PYTHON_BIN=$(brew --prefix python@3.12)/bin/python3.12" >> "$GITHUB_ENV"
+      - name: Create isolated build environment
+        run: |
+          "$PYTHON_BIN" -m venv .build-venv
+          echo "BUILD_PYTHON=$GITHUB_WORKSPACE/.build-venv/bin/python" >> "$GITHUB_ENV"
       - name: Install build dependencies
         run: |
-          "$PYTHON_BIN" -m pip install -e ".[dev]"
+          "$BUILD_PYTHON" -m pip install --upgrade pip
+          "$BUILD_PYTHON" -m pip install -e ".[dev]"
       - name: Run desktop unit and scheduler tests
         run: |
-          "$PYTHON_BIN" -m pytest tests/ -m "not ollama"
+          "$BUILD_PYTHON" -m pytest tests/ -m "not ollama"
       - name: Build unsigned DMG
         env:
           VERSION: ${{ steps.version.outputs.value }}
           BUILD_LABEL: ${{ matrix.artifact_label }}
         run: |
-          VERSION="$VERSION" BUILD_LABEL="$BUILD_LABEL" PYTHON_BIN="$PYTHON_BIN" bash scripts/build_macos.sh
+          VERSION="$VERSION" BUILD_LABEL="$BUILD_LABEL" PYTHON_BIN="$BUILD_PYTHON" bash scripts/build_macos.sh
       - name: Smoke test packaged headless runner
         run: |
           smoke_root="$(mktemp -d)"
           export DDT_USER_CONFIG="$smoke_root/settings.json"
           export DDT_SMOKE_HOME="$smoke_root/DDT"
-          "$PYTHON_BIN" - <<'PY'
+          "$BUILD_PYTHON" - <<'PY'
           import os
           from pathlib import Path
           from ddt_local.user_config import UserSettings, save_user_settings
