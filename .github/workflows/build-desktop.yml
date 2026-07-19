@@ -126,6 +126,12 @@ jobs:
           $env:DDT_SMOKE_HOME = Join-Path $smokeRoot "DDT"
           python -c "import os; from pathlib import Path; from ddt_local.user_config import UserSettings, save_user_settings; save_user_settings(UserSettings(ddt_home=Path(os.environ['DDT_SMOKE_HOME']), setup_completed=True), Path(os.environ['DDT_USER_CONFIG']))"
           & ".\dist\DDT Local Extractor\ddt-local-runner.exe" --run-once
+          $runnerExitCode = $LASTEXITCODE
+          if ($runnerExitCode -ne 0) {
+            $runnerLog = Join-Path $env:DDT_SMOKE_HOME "logs\desktop-runner.log"
+            if (Test-Path $runnerLog) { Get-Content $runnerLog }
+            throw "Packaged runner failed with exit code $runnerExitCode"
+          }
           if (-not (Test-Path (Join-Path $env:DDT_SMOKE_HOME "data\ddt.sqlite3"))) { throw "SQLite not created" }
           if (-not (Test-Path (Join-Path $env:DDT_SMOKE_HOME "output\DDT_estratti.xlsx"))) { throw "Excel not created" }
       - uses: actions/upload-artifact@v4
