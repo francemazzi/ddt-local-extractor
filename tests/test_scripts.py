@@ -96,20 +96,21 @@ def test_pull_models_uses_configurable_required_models():
     assert '"$OLLAMA_BIN" pull "$model"' in script
 
 
-def test_packaging_scripts_define_unsigned_native_installers():
+def test_packaging_scripts_define_portable_desktop_archives():
     macos = (SCRIPTS / "build_macos.sh").read_text(encoding="utf-8")
     windows = (SCRIPTS / "build_windows.ps1").read_text(encoding="utf-8")
-    inno = (PROJECT_ROOT / "packaging" / "DDT-Local-Extractor.iss").read_text(encoding="utf-8")
     assert "PyInstaller" in macos
     assert "--exclude-module nltk" in macos
-    assert "hdiutil create" in macos
+    assert "codesign --force --deep --sign -" in macos
+    assert "ditto -c -k" in macos
+    assert "start.command" in macos
     assert "PyInstaller" in windows
     assert "--exclude-module nltk" in windows
-    assert "ISCC.exe" in windows
-    assert "DDT-Local-Extractor-{#MyAppVersion}-Setup" in inno
-    assert 'OutputDir=..\\dist\\installer' in inno
-    assert 'Source: "..\\dist\\DDT Local Extractor\\*"' in inno
-    assert "UninstallDisplayIcon" in inno
+    assert "Compress-Archive" in windows
+    assert "start.bat" in windows
+    assert (PROJECT_ROOT / "packaging" / "start.command").is_file()
+    assert (PROJECT_ROOT / "packaging" / "start.sh").is_file()
+    assert (PROJECT_ROOT / "packaging" / "start.bat").is_file()
 
 
 def test_release_workflow_publishes_versioned_packages_for_each_desktop_platform():
@@ -133,6 +134,8 @@ def test_pages_workflow_deploys_the_download_landing_page():
     assert "actions/deploy-pages@v4" in workflow
     assert "actions/upload-pages-artifact@v4" in workflow
     assert "path: site" in workflow
-    assert "DDT-Local-Extractor-1.0.0-macOS-Apple-Silicon.dmg" in page
-    assert "DDT-Local-Extractor-1.0.0-macOS-Intel.dmg" in page
-    assert "DDT-Local-Extractor-1.0.0-Setup.exe" in page
+    assert "DDT-Local-Extractor-1.0.0-macOS-Apple-Silicon.zip" in page
+    assert "DDT-Local-Extractor-1.0.0-macOS-Intel.zip" in page
+    assert "DDT-Local-Extractor-1.0.0-Windows-x64.zip" in page
+    assert "start.command" in page
+    assert "start.bat" in page

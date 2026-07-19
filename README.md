@@ -8,13 +8,13 @@ Supporta PDF con testo nativo, PDF scansiti e immagini (`.jpg`, `.jpeg`, `.png`,
 
 L'utente finale non deve usare il Terminale né impostare `DDT_HOME`.
 
-1. Apri la [pagina di download](https://francemazzi.github.io/ddt-local-extractor/) e scegli il pacchetto per il tuo computer: macOS Apple Silicon, macOS Intel o Windows x64. I file sono pubblicati anche nelle [GitHub Releases](https://github.com/francemazzi/ddt-local-extractor/releases).
-2. Installa e apri **DDT Local Extractor** dal Finder, dal menu Start o dal collegamento Desktop.
-3. Al primo avvio l'app mostra il selettore cartella nativo: scegli la cartella DDT esatta, per esempio `Documenti/DDT`.
+1. Apri la [pagina di download](https://francemazzi.github.io/ddt-local-extractor/) e scarica lo ZIP per il tuo computer: macOS Apple Silicon, macOS Intel o Windows x64. I file sono pubblicati anche nelle [GitHub Releases](https://github.com/francemazzi/ddt-local-extractor/releases).
+2. Estrai completamente lo ZIP, senza spostare i file al suo interno. Su Windows fai doppio clic su **`start.bat`**; su Mac fai doppio clic su **`start.command`** (`start.sh` è disponibile anche da Terminale).
+3. Al primo avvio l'app apre il selettore cartella nativo: scegli la cartella DDT esatta, per esempio `Documenti/DDT`.
 4. L'app crea automaticamente `inbox`, `processed`, `errors`, `output` e il database; controlla Ollama e guida al download dei due modelli richiesti.
 5. Trascina i PDF in `inbox`. L'app li elabora automaticamente entro cinque minuti; la dashboard permette anche **Elabora ora**, **Apri inbox** e **Apri Excel**.
 
-La release stabile corrente è **v1.0.0**. Gli installatori iniziali non sono firmati. Su macOS potrebbe essere necessario usare Finder → tasto destro sull'app → **Apri** una sola volta; su Windows confermare **Ulteriori informazioni → Esegui comunque** dopo aver verificato che il download provenga dalla release ufficiale. La firma Apple/Windows sarà aggiunta in una release successiva.
+La release stabile corrente è **v1.0.0**. Verifica sempre che lo ZIP provenga dalla release ufficiale. Se il sistema chiede una conferma al primo avvio, scegli **Apri** solo dopo questa verifica.
 
 ## Architettura
 
@@ -245,9 +245,9 @@ python -m ddt_local doctor
 
 Lo stato dettagliato delle fasi e i criteri di accettazione sono in [roadmap.md](roadmap.md).
 
-## Build e pubblicazione degli installatori
+## Build e pubblicazione degli archivi portabili
 
-Le build sono prodotte nativamente dalla workflow GitHub **Publish desktop release**: genera un DMG per Apple Silicon, uno per Mac Intel e un installer Inno Setup per Windows x64, poi li allega alla GitHub Release. Creare e inviare il tag `v1.0.0` avvia la pubblicazione; il deployment della pagina download viene eseguito a ogni aggiornamento di `main`.
+Le build sono prodotte nativamente dalla workflow GitHub **Publish desktop release**: genera uno ZIP portabile per Apple Silicon, uno per Mac Intel e uno per Windows x64. Ogni archivio contiene l'app, l'avviatore e un `LEGGIMI.txt`. Creare e inviare il tag `v1.0.0` avvia la pubblicazione; il deployment della pagina download viene eseguito a ogni aggiornamento di `main`.
 
 Per attivare GitHub Pages la prima volta, nel repository scegliere **Settings → Pages → Build and deployment → GitHub Actions**. La pagina sarà disponibile su `https://francemazzi.github.io/ddt-local-extractor/`.
 
@@ -260,4 +260,4 @@ PYTHON_BIN="$(brew --prefix python@3.12)/bin/python3.12"
 VERSION=1.0.0 BUILD_LABEL=macOS-Apple-Silicon PYTHON_BIN="$PYTHON_BIN" bash scripts/build_macos.sh
 ```
 
-Su Windows eseguire `scripts\build_windows.ps1 -Version 1.0.0` da PowerShell dopo avere installato Inno Setup 6. Le build restano unsigned finché non saranno disponibili certificati Apple e Windows.
+Su Windows eseguire `scripts\build_windows.ps1 -Version 1.0.0` da PowerShell. La build produce direttamente lo ZIP portabile.

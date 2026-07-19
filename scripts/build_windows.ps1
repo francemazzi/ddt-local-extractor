@@ -1,4 +1,4 @@
-<# Build an unsigned Windows installer. Requires PyInstaller and Inno Setup 6. #>
+<# Build a portable Windows ZIP. Requires PyInstaller. #>
 
 [CmdletBinding()]
 param(
@@ -18,9 +18,18 @@ if ($LASTEXITCODE -ne 0) { throw "PyInstaller GUI build failed" }
 if ($LASTEXITCODE -ne 0) { throw "PyInstaller failed" }
 
 $AppDir = Join-Path $ProjectDir "dist\DDT Local Extractor"
-Copy-Item (Join-Path $ProjectDir "dist\ddt-local-runner.exe") $AppDir -Force
+$PackageName = "DDT-Local-Extractor-$Version-Windows-x64"
+$PackageDir = Join-Path $ProjectDir (Join-Path "dist" $PackageName)
+$ArchivePath = Join-Path $ProjectDir (Join-Path "dist" "$PackageName.zip")
 
-$Iscc = "${env:ProgramFiles(x86)}\Inno Setup 6\ISCC.exe"
-if (-not (Test-Path $Iscc)) { throw "Inno Setup 6 not found: $Iscc" }
-& $Iscc "/DMyAppVersion=$Version" packaging\DDT-Local-Extractor.iss
-if ($LASTEXITCODE -ne 0) { throw "Inno Setup failed" }
+if (Test-Path $PackageDir) { Remove-Item -Recurse -Force $PackageDir }
+if (Test-Path $ArchivePath) { Remove-Item -Force $ArchivePath }
+New-Item -ItemType Directory -Path $PackageDir | Out-Null
+
+Copy-Item $AppDir $PackageDir -Recurse
+Copy-Item (Join-Path $ProjectDir "dist\ddt-local-runner.exe") (Join-Path $PackageDir "DDT Local Extractor\ddt-local-runner.exe") -Force
+Copy-Item (Join-Path $ProjectDir "packaging\start.bat") (Join-Path $PackageDir "start.bat")
+Copy-Item (Join-Path $ProjectDir "packaging\LEGGIMI.txt") (Join-Path $PackageDir "LEGGIMI.txt")
+
+Compress-Archive -Path $PackageDir -DestinationPath $ArchivePath -CompressionLevel Optimal
+Write-Output "Created $ArchivePath"

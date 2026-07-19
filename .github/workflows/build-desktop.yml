@@ -63,7 +63,7 @@ jobs:
       - name: Run desktop unit and scheduler tests
         run: |
           "$BUILD_PYTHON" -m pytest tests/ -m "not ollama"
-      - name: Build unsigned DMG
+      - name: Build portable macOS ZIP
         env:
           VERSION: ${{ steps.version.outputs.value }}
           BUILD_LABEL: ${{ matrix.artifact_label }}
@@ -84,13 +84,15 @@ jobs:
               Path(os.environ["DDT_USER_CONFIG"]),
           )
           PY
-          ./dist/ddt-local-runner --run-once
+          ./dist/DDT\ Local\ Extractor.app/Contents/Resources/ddt-local-runner --run-once
           test -f "$DDT_SMOKE_HOME/data/ddt.sqlite3"
           test -f "$DDT_SMOKE_HOME/output/DDT_estratti.xlsx"
+          codesign --verify --deep --strict "./dist/DDT Local Extractor.app"
+          unzip -l dist/*.zip | grep -F "start.command"
       - uses: actions/upload-artifact@v4
         with:
           name: ddt-local-extractor-${{ matrix.artifact_label }}
-          path: dist/*.dmg
+          path: dist/*.zip
           if-no-files-found: error
 
   windows:
@@ -112,15 +114,14 @@ jobs:
       - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
-      - name: Install build dependencies and Inno Setup
+      - name: Install build dependencies
         shell: pwsh
         run: |
           python -m pip install -e ".[dev]"
-          choco install innosetup --no-progress --yes
       - name: Run desktop unit and scheduler tests
         shell: pwsh
         run: python -m pytest tests/ -m "not ollama"
-      - name: Build unsigned EXE installer
+      - name: Build portable Windows ZIP
         shell: pwsh
         run: .\scripts\build_windows.ps1 -Version "${{ steps.version.outputs.value }}"
       - name: Smoke test packaged headless runner
@@ -130,7 +131,7 @@ jobs:
           $env:DDT_USER_CONFIG = Join-Path $smokeRoot "settings.json"
           $env:DDT_SMOKE_HOME = Join-Path $smokeRoot "DDT"
           python -c "import os; from pathlib import Path; from ddt_local.user_config import UserSettings, save_user_settings; save_user_settings(UserSettings(ddt_home=Path(os.environ['DDT_SMOKE_HOME']), setup_completed=True), Path(os.environ['DDT_USER_CONFIG']))"
-          $runner = Start-Process -FilePath ".\dist\DDT Local Extractor\ddt-local-runner.exe" -ArgumentList "--run-once" -Wait -PassThru
+          $runner = Start-Process -FilePath ".\dist\DDT-Local-Extractor-${{ steps.version.outputs.value }}-Windows-x64\DDT Local Extractor\ddt-local-runner.exe" -ArgumentList "--run-once" -Wait -PassThru
           $runnerExitCode = $runner.ExitCode
           if ($runnerExitCode -ne 0) {
             $runnerLog = Join-Path $env:DDT_SMOKE_HOME "logs\desktop-runner.log"
@@ -139,10 +140,13 @@ jobs:
           }
           if (-not (Test-Path (Join-Path $env:DDT_SMOKE_HOME "data\ddt.sqlite3"))) { throw "SQLite not created" }
           if (-not (Test-Path (Join-Path $env:DDT_SMOKE_HOME "output\DDT_estratti.xlsx"))) { throw "Excel not created" }
+          $archive = Get-ChildItem .\dist\*.zip | Select-Object -First 1
+          if (-not $archive) { throw "Portable ZIP not created" }
+          if (-not ((tar -tf $archive.FullName) -match "start.bat")) { throw "start.bat missing from portable ZIP" }
       - uses: actions/upload-artifact@v4
         with:
           name: ddt-local-extractor-windows
-          path: dist/installer/*.exe
+          path: dist/*.zip
           if-no-files-found: error
 
   release:
@@ -166,7 +170,8 @@ jobs:
           body: |
             Release desktop di DDT Local Extractor.
 
-            Scegli il pacchetto adatto al tuo computer: macOS Apple Silicon, macOS Intel oppure Windows x64. Al primo avvio l'app guida la scelta della cartella di lavoro, l'installazione di Ollama e il download dei modelli necessari.
+            Scarica lo ZIP adatto al tuo computer, estrailo e avvia `start.command` su macOS oppure `start.bat` su Windows. Al primo avvio l'app chiede la cartella di lavoro e guida l'installazione di Ollama e dei modelli necessari.
 
-            I pacchetti non sono ancora firmati: scaricali solo da questa release ufficiale. I PDF, il database e l'Excel restano sul computer.
+            I PDF, il database e l'Excel restano sul computer.
           files: release-assets/*
+          overwrite_files: true

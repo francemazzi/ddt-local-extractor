@@ -483,7 +483,7 @@ python -m ddt_local benchmark \
 
 ## Fase 13 — Primo avvio grafico e cartella DDT persistente
 
-- [ ] **Automazione implementata — in attesa di accettazione manuale dell'installer**
+- [ ] **Automazione implementata — in attesa di accettazione manuale dell'archivio portabile**
 
 **Obiettivo:** distribuire una prima esperienza macOS/Windows senza Terminale: scelta grafica della cartella una sola volta, verifica Ollama, runner invisibile e pianificazione ogni cinque minuti.
 
@@ -495,7 +495,7 @@ python -m ddt_local benchmark \
 - [x] Dashboard: stato, apri inbox/Excel, elabora ora e cambio cartella confermato senza migrare lo storico
 - [x] Runner `--run-once` senza UI, log su file e uso della configurazione persistente
 - [x] Backend scheduler per utente: `launchd` e Task Scheduler; gli script tecnici esistenti delegano allo stesso backend
-- [x] Build native PyInstaller: `.app`/DMG macOS, `.exe`/Inno Setup Windows, installatori unsigned documentati
+- [x] Build native PyInstaller: ZIP portabile per macOS Apple Silicon, macOS Intel e Windows x64, con avviatore incluso
 - [x] Workflow GitHub Actions per build nativa, test unitari e smoke del runner confezionato su macOS e Windows
 - [x] Test di configurazione, wizard/controller, runner, scheduler, packaging e CLI
 
@@ -511,7 +511,7 @@ python -m PyInstaller --noconfirm --clean --paths src --exclude-module nltk \
 DDT_USER_CONFIG=/tmp/ddt-settings.json ./dist/ddt-local-runner --run-once
 ```
 
-**Accettazione ancora richiesta:** installare il DMG/EXE prodotto dalla CI su una macchina utente, completare il wizard senza Terminale, trascinare un PDF in `inbox` e verificare PDF archiviato ed Excel aggiornato entro cinque minuti.
+**Accettazione ancora richiesta:** estrarre lo ZIP prodotto dalla CI su una macchina utente, avviare `start.command`/`start.bat`, completare il wizard senza Terminale, trascinare un PDF in `inbox` e verificare PDF archiviato ed Excel aggiornato entro cinque minuti.
 
 ---
 
@@ -536,7 +536,7 @@ Aggiornare a `[x]` solo dopo verifica reale (mappatura alle fasi indicative).
 - [x] 15. Tutti i test unitari passano senza modelli né rete — *F12*
 - [x] 16. Funziona su macOS e Windows — *F11 / F12*
 - [x] 17. Nessun servizio applicativo resident obbligatorio — *architettura globale*
-- [ ] 18. Primo avvio senza Terminale: scelta cartella persistente, modelli guidati e job automatico ogni 5 minuti — *F13, accettazione installer manuale*
+- [ ] 18. Primo avvio senza Terminale: scelta cartella persistente, modelli guidati e job automatico ogni 5 minuti — *F13, accettazione archivio portabile manuale*
 
 ---
 
@@ -585,7 +585,7 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | 2026-07-18 | 9 | PASS (116) | PASS (15) | N/A | CLI completa; run reale su 01 nativo + 08 scansione → SQLite, Excel e 2 PDF archiviati |
 | 2026-07-18 | 11 | PASS (123) | N/A | N/A | Wrapper macOS eseguito; plist launchd validato in dry-run; script PowerShell validato dal parser |
 | 2026-07-18 | 12 | PASS (126) | PASS (15) | PASS (2 config × 3 PDF) | README completo; CI macOS/Windows verde, inclusa esecuzione di entrambi i wrapper |
-| 2026-07-19 | 13 | PASS (151) | PASS (15) | N/A | Configurazione persistente, wizard/dashboard, scheduler nativo e runner PyInstaller pulito: SQLite, Excel e log OK. In attesa di build CI/accettazione installer manuale. |
+| 2026-07-19 | 13 | PASS (151) | PASS (15) | N/A | Configurazione persistente, wizard/dashboard, scheduler nativo e runner PyInstaller pulito: SQLite, Excel e log OK. In attesa di build CI/accettazione archivio portabile manuale. |
 
 ---
 

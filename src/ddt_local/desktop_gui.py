@@ -123,6 +123,11 @@ class DesktopApplication:
             wraplength=500,
         ).pack(anchor="w", pady=(10, 0))
 
+        # The portable launchers promise a first-run folder choice. Showing the
+        # native picker immediately keeps that promise while leaving the button
+        # available if the user cancels it.
+        self.root.after(150, self.choose_directory)
+
     def choose_directory(self) -> None:
         selected = self.filedialog.askdirectory(
             title="Scegli la cartella DDT",

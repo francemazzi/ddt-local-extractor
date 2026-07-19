@@ -1,0 +1,18 @@
+DDT LOCAL EXTRACTOR 1.0.0
+========================
+
+1. Estrai completamente questo archivio ZIP in una cartella a tua scelta.
+2. Non spostare o rinominare i file all'interno della cartella estratta.
+3. Avvia l'app:
+   - Windows: doppio clic su start.bat
+   - macOS: doppio clic su start.command
+     (start.sh e' disponibile anche da Terminale.)
+4. Al primo avvio scegli la cartella in cui lavorare con i DDT.
+
+L'app crea nella cartella scelta:
+- inbox: inserisci qui i PDF o le immagini dei DDT;
+- output/DDT_estratti.xlsx: il file Excel aggiornato;
+- processed ed errors: lo storico dell'elaborazione.
+
+Al primo avvio l'app verifica Ollama e ti guida nel download dei modelli necessari.
+PDF, Excel e database restano sul tuo computer.
