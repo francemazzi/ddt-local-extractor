@@ -122,6 +122,7 @@ def test_release_workflow_publishes_versioned_packages_for_each_desktop_platform
     assert "softprops/action-gh-release@v3" in workflow
     assert '"$PYTHON_BIN" -m venv .build-venv' in workflow
     assert '"$BUILD_PYTHON" -m pip install -e ".[dev]"' in workflow
+    assert '"$python_bin" -c "import tkinter"' in workflow
     assert "Start-Process -FilePath" in workflow
     assert "Packaged runner failed with exit code" in workflow
 

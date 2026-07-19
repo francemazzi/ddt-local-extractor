@@ -45,8 +45,13 @@ jobs:
           echo "value=$version" >> "$GITHUB_OUTPUT"
       - name: Install Homebrew Python with Tcl/Tk
         run: |
-          brew install python@3.12 python-tk@3.12
-          echo "PYTHON_BIN=$(brew --prefix python@3.12)/bin/python3.12" >> "$GITHUB_ENV"
+          # The Intel image also has python.org shims in /usr/local. Homebrew can
+          # report their link conflict after the formulae were installed; validate
+          # the isolated Homebrew interpreter instead of relying on that exit code.
+          brew install python@3.12 python-tk@3.12 || true
+          python_bin="$(brew --prefix python@3.12)/bin/python3.12"
+          "$python_bin" -c "import tkinter"
+          echo "PYTHON_BIN=$python_bin" >> "$GITHUB_ENV"
       - name: Create isolated build environment
         run: |
           "$PYTHON_BIN" -m venv .build-venv
