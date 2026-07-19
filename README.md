@@ -8,13 +8,13 @@ Supporta PDF con testo nativo, PDF scansiti e immagini (`.jpg`, `.jpeg`, `.png`,
 
 L'utente finale non deve usare il Terminale né impostare `DDT_HOME`.
 
-1. Scarica l'installatore per macOS (`.dmg`) o Windows (`.exe`) dalle [GitHub Releases](https://github.com/francemazzi/ddt-local-extractor/releases).
+1. Apri la [pagina di download](https://francemazzi.github.io/ddt-local-extractor/) e scegli il pacchetto per il tuo computer: macOS Apple Silicon, macOS Intel o Windows x64. I file sono pubblicati anche nelle [GitHub Releases](https://github.com/francemazzi/ddt-local-extractor/releases).
 2. Installa e apri **DDT Local Extractor** dal Finder, dal menu Start o dal collegamento Desktop.
 3. Al primo avvio l'app mostra il selettore cartella nativo: scegli la cartella DDT esatta, per esempio `Documenti/DDT`.
 4. L'app crea automaticamente `inbox`, `processed`, `errors`, `output` e il database; controlla Ollama e guida al download dei due modelli richiesti.
 5. Trascina i PDF in `inbox`. L'app li elabora automaticamente entro cinque minuti; la dashboard permette anche **Elabora ora**, **Apri inbox** e **Apri Excel**.
 
-Gli installatori iniziali non sono firmati. Su macOS potrebbe essere necessario usare Finder → tasto destro sull'app → **Apri** una sola volta; su Windows confermare **Ulteriori informazioni → Esegui comunque** dopo aver verificato che il download provenga dalla release ufficiale. La firma Apple/Windows sarà aggiunta in una release successiva.
+La release stabile corrente è **v1.0.0**. Gli installatori iniziali non sono firmati. Su macOS potrebbe essere necessario usare Finder → tasto destro sull'app → **Apri** una sola volta; su Windows confermare **Ulteriori informazioni → Esegui comunque** dopo aver verificato che il download provenga dalla release ufficiale. La firma Apple/Windows sarà aggiunta in una release successiva.
 
 ## Architettura
 
@@ -245,15 +245,19 @@ python -m ddt_local doctor
 
 Lo stato dettagliato delle fasi e i criteri di accettazione sono in [roadmap.md](roadmap.md).
 
-## Build degli installatori
+## Build e pubblicazione degli installatori
 
-Le build sono prodotte nativamente dalla workflow GitHub **Build desktop installers**: su macOS genera un DMG, su Windows un installer Inno Setup. Per una build locale di sviluppo servono PyInstaller, Tcl/Tk e gli strumenti di packaging del sistema:
+Le build sono prodotte nativamente dalla workflow GitHub **Publish desktop release**: genera un DMG per Apple Silicon, uno per Mac Intel e un installer Inno Setup per Windows x64, poi li allega alla GitHub Release. Creare e inviare il tag `v1.0.0` avvia la pubblicazione; il deployment della pagina download viene eseguito a ogni aggiornamento di `main`.
+
+Per attivare GitHub Pages la prima volta, nel repository scegliere **Settings → Pages → Build and deployment → GitHub Actions**. La pagina sarà disponibile su `https://francemazzi.github.io/ddt-local-extractor/`.
+
+Per una build locale di sviluppo servono PyInstaller, Tcl/Tk e gli strumenti di packaging del sistema:
 
 ```bash
 brew install python@3.12 python-tk@3.12
 PYTHON_BIN="$(brew --prefix python@3.12)/bin/python3.12"
 "$PYTHON_BIN" -m pip install -e ".[dev]"
-PYTHON_BIN="$PYTHON_BIN" bash scripts/build_macos.sh
+VERSION=1.0.0 BUILD_LABEL=macOS-Apple-Silicon PYTHON_BIN="$PYTHON_BIN" bash scripts/build_macos.sh
 ```
 
-Su Windows eseguire `scripts\build_windows.ps1` da PowerShell dopo avere installato Inno Setup 6. Le build restano unsigned finché non saranno disponibili certificati Apple e Windows.
+Su Windows eseguire `scripts\build_windows.ps1 -Version 1.0.0` da PowerShell dopo avere installato Inno Setup 6. Le build restano unsigned finché non saranno disponibili certificati Apple e Windows.

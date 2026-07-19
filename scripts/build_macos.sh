@@ -6,7 +6,8 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 PROJECT_DIR="$(cd "$SCRIPT_DIR/.." && pwd)"
 PYTHON_BIN="${PYTHON_BIN:-python3}"
-VERSION="${VERSION:-0.1.0}"
+VERSION="${VERSION:-1.0.0}"
+BUILD_LABEL="${BUILD_LABEL:-macOS}"
 DIST_DIR="$PROJECT_DIR/dist"
 APP_NAME="DDT Local Extractor"
 APP_PATH="$DIST_DIR/$APP_NAME.app"
@@ -30,6 +31,6 @@ rm -rf "$STAGING_DIR"
 mkdir -p "$STAGING_DIR"
 cp -R "$APP_PATH" "$STAGING_DIR/"
 hdiutil create -volname "$APP_NAME" -srcfolder "$STAGING_DIR" -ov \
-    -format UDZO "$DIST_DIR/DDT-Local-Extractor-$VERSION-macOS.dmg"
+    -format UDZO "$DIST_DIR/DDT-Local-Extractor-$VERSION-$BUILD_LABEL.dmg"
 
-echo "Created $DIST_DIR/DDT-Local-Extractor-$VERSION-macOS.dmg"
+echo "Created $DIST_DIR/DDT-Local-Extractor-$VERSION-$BUILD_LABEL.dmg"

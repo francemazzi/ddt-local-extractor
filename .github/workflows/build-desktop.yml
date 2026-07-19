@@ -1,16 +1,48 @@
-name: Build desktop installers
+name: Publish desktop release
 
 on:
-  workflow_dispatch:
   push:
     tags:
-      - "desktop-v*"
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Versione semantica da pubblicare (es. v1.0.0)"
+        required: true
+        default: "v1.0.0"
+        type: string
+
+permissions:
+  contents: write
 
 jobs:
   macos:
-    runs-on: macos-latest
+    name: macOS (${{ matrix.label }})
+    runs-on: ${{ matrix.runner }}
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - runner: macos-13
+            label: Intel
+            artifact_label: macOS-Intel
+          - runner: macos-14
+            label: Apple Silicon
+            artifact_label: macOS-Apple-Silicon
+    env:
+      RELEASE_VERSION: ${{ inputs.version || github.ref_name }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
+      - name: Resolve release version
+        id: version
+        shell: bash
+        run: |
+          version="${RELEASE_VERSION#v}"
+          if ! [[ "$version" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Use a semantic version such as v1.0.0; received: $RELEASE_VERSION" >&2
+            exit 1
+          fi
+          echo "value=$version" >> "$GITHUB_OUTPUT"
       - name: Install Homebrew Python with Tcl/Tk
         run: |
           brew install python@3.12 python-tk@3.12
@@ -22,10 +54,11 @@ jobs:
         run: |
           "$PYTHON_BIN" -m pytest tests/ -m "not ollama"
       - name: Build unsigned DMG
+        env:
+          VERSION: ${{ steps.version.outputs.value }}
+          BUILD_LABEL: ${{ matrix.artifact_label }}
         run: |
-          VERSION=${GITHUB_REF_NAME#desktop-v}
-          if [ "$VERSION" = "$GITHUB_REF_NAME" ]; then VERSION=0.1.0; fi
-          VERSION="$VERSION" PYTHON_BIN="$PYTHON_BIN" bash scripts/build_macos.sh
+          VERSION="$VERSION" BUILD_LABEL="$BUILD_LABEL" PYTHON_BIN="$PYTHON_BIN" bash scripts/build_macos.sh
       - name: Smoke test packaged headless runner
         run: |
           smoke_root="$(mktemp -d)"
@@ -46,14 +79,27 @@ jobs:
           test -f "$DDT_SMOKE_HOME/output/DDT_estratti.xlsx"
       - uses: actions/upload-artifact@v4
         with:
-          name: ddt-local-extractor-macos
+          name: ddt-local-extractor-${{ matrix.artifact_label }}
           path: dist/*.dmg
+          if-no-files-found: error
 
   windows:
+    name: Windows (x64)
     runs-on: windows-latest
+    env:
+      RELEASE_VERSION: ${{ inputs.version || github.ref_name }}
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - name: Resolve release version
+        id: version
+        shell: pwsh
+        run: |
+          $version = $env:RELEASE_VERSION -replace '^v', ''
+          if ($version -notmatch '^\d+\.\d+\.\d+$') {
+            throw "Use a semantic version such as v1.0.0; received: $env:RELEASE_VERSION"
+          }
+          "value=$version" >> $env:GITHUB_OUTPUT
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.12"
       - name: Install build dependencies and Inno Setup
@@ -66,10 +112,7 @@ jobs:
         run: python -m pytest tests/ -m "not ollama"
       - name: Build unsigned EXE installer
         shell: pwsh
-        run: |
-          $version = $env:GITHUB_REF_NAME.Replace("desktop-v", "")
-          if ($version -eq $env:GITHUB_REF_NAME) { $version = "0.1.0" }
-          .\scripts\build_windows.ps1 -Version $version
+        run: .\scripts\build_windows.ps1 -Version "${{ steps.version.outputs.value }}"
       - name: Smoke test packaged headless runner
         shell: pwsh
         run: |
@@ -84,3 +127,30 @@ jobs:
         with:
           name: ddt-local-extractor-windows
           path: dist/installer/*.exe
+          if-no-files-found: error
+
+  release:
+    name: Create GitHub release
+    needs: [macos, windows]
+    runs-on: ubuntu-latest
+    env:
+      RELEASE_TAG: ${{ inputs.version || github.ref_name }}
+    steps:
+      - name: Collect desktop packages
+        uses: actions/download-artifact@v4
+        with:
+          path: release-assets
+          merge-multiple: true
+      - name: Publish release and packages
+        uses: softprops/action-gh-release@v3
+        with:
+          tag_name: ${{ env.RELEASE_TAG }}
+          target_commitish: ${{ github.sha }}
+          name: DDT Local Extractor ${{ env.RELEASE_TAG }}
+          body: |
+            Release desktop di DDT Local Extractor.
+
+            Scegli il pacchetto adatto al tuo computer: macOS Apple Silicon, macOS Intel oppure Windows x64. Al primo avvio l'app guida la scelta della cartella di lavoro, l'installazione di Ollama e il download dei modelli necessari.
+
+            I pacchetti non sono ancora firmati: scaricali solo da questa release ufficiale. I PDF, il database e l'Excel restano sul computer.
+          files: release-assets/*

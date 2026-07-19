@@ -1,7 +1,7 @@
 ; Unsigned installer. Code signing is intentionally a later release phase.
 #define MyAppName "DDT Local Extractor"
 #ifndef MyAppVersion
-  #define MyAppVersion "0.1.0"
+  #define MyAppVersion "1.0.0"
 #endif
 #define MyAppPublisher "DDT Local Extractor"
 #define MyAppExeName "DDT Local Extractor.exe"
@@ -16,7 +16,7 @@ DefaultDirName={localappdata}\Programs\{#MyAppName}
 DefaultGroupName={#MyAppName}
 PrivilegesRequired=lowest
 OutputDir=dist\installer
-OutputBaseFilename=DDT-Local-Extractor-Setup
+OutputBaseFilename=DDT-Local-Extractor-{#MyAppVersion}-Setup
 Compression=lzma
 SolidCompression=yes
 WizardStyle=modern

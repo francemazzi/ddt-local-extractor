@@ -106,4 +106,25 @@ def test_packaging_scripts_define_unsigned_native_installers():
     assert "PyInstaller" in windows
     assert "--exclude-module nltk" in windows
     assert "ISCC.exe" in windows
+    assert "DDT-Local-Extractor-{#MyAppVersion}-Setup" in inno
     assert "UninstallDisplayIcon" in inno
+
+
+def test_release_workflow_publishes_versioned_packages_for_each_desktop_platform():
+    workflow = (PROJECT_ROOT / ".github" / "workflows" / "build-desktop.yml").read_text(encoding="utf-8")
+    assert 'tags:\n      - "v*"' in workflow
+    assert "macOS-Apple-Silicon" in workflow
+    assert "macOS-Intel" in workflow
+    assert "ddt-local-extractor-windows" in workflow
+    assert "softprops/action-gh-release@v3" in workflow
+
+
+def test_pages_workflow_deploys_the_download_landing_page():
+    workflow = (PROJECT_ROOT / ".github" / "workflows" / "deploy-pages.yml").read_text(encoding="utf-8")
+    page = (PROJECT_ROOT / "site" / "index.html").read_text(encoding="utf-8")
+    assert "actions/deploy-pages@v4" in workflow
+    assert "actions/upload-pages-artifact@v4" in workflow
+    assert "path: site" in workflow
+    assert "DDT-Local-Extractor-1.0.0-macOS-Apple-Silicon.dmg" in page
+    assert "DDT-Local-Extractor-1.0.0-macOS-Intel.dmg" in page
+    assert "DDT-Local-Extractor-1.0.0-Setup.exe" in page
