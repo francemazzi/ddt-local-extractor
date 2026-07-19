@@ -50,7 +50,8 @@ flowchart TB
         F10[F10 Benchmark]
         F11[F11 Script scheduling]
         F12[F12 Test docs accettazione]
-        F0 --> F1 --> F2 --> F3 --> F4 --> F5 --> F6 --> F7 --> F8 --> F9 --> F10 --> F11 --> F12
+        F13[F13 Primo avvio grafico]
+        F0 --> F1 --> F2 --> F3 --> F4 --> F5 --> F6 --> F7 --> F8 --> F9 --> F10 --> F11 --> F12 --> F13
     end
 ```
 
@@ -336,14 +337,14 @@ pytest tests/ -m ollama
 
 ## Fase 8 — Export Excel e persistenza produzione
 
-- [ ] **Fase 8 completata**
+- [x] **Fase 8 completata**
 
 **Obiettivo:** output utente e archivio completo.
 
 ### Checklist deliverable
 
-- [ ] `src/ddt_local/excel.py` — fogli `DDT`, `Righe`, `Errori`, `Da verificare`; scrittura atomica; protezione formula injection
-- [ ] Integrazione extractor → DB → Excel nel flusso di run
+- [x] `src/ddt_local/excel.py` — fogli `DDT`, `Righe`, `Errori`, `Da verificare`; scrittura atomica; protezione formula injection
+- [x] Integrazione extractor → DB → Excel nel flusso di run
 
 ### Gate
 
@@ -359,15 +360,15 @@ pytest tests/test_excel.py
 
 ## Fase 9 — Job produzione end-to-end
 
-- [ ] **Fase 9 completata** (richiede gate Ollama)
+- [x] **Fase 9 completata** (richiede gate Ollama)
 
 **Obiettivo:** job one-shot da inbox a processed/errors.
 
 ### Checklist deliverable
 
-- [ ] CLI completa: `init`, `doctor`, `run --once`, `export`, `status`, `reprocess`
-- [ ] Flusso: scan → lock → hash → extract → DB → Excel atomico → move → exit 0
-- [ ] `doctor`: Python, dir, permessi, Ollama, modelli, SQLite, Excel
+- [x] CLI completa: `init`, `doctor`, `run --once`, `export`, `status`, `reprocess`
+- [x] Flusso: scan → lock → hash → extract → DB → Excel atomico → move → exit 0
+- [x] `doctor`: Python, dir, permessi, Ollama, modelli, SQLite, Excel
 
 ### Gate
 
@@ -426,17 +427,17 @@ python -m ddt_local benchmark \
 
 ## Fase 11 — Script multipiattaforma e scheduling
 
-- [ ] **Fase 11 completata**
+- [x] **Fase 11 completata**
 
 **Obiettivo:** esecuzione via launchd, Task Scheduler, terminale.
 
 ### Checklist deliverable
 
-- [ ] `scripts/run_macos.sh`
-- [ ] `scripts/run_windows.cmd`
-- [ ] `scripts/install_launchd.sh`
-- [ ] `scripts/install_task_scheduler.ps1`
-- [ ] `scripts/pull_models.sh`
+- [x] `scripts/run_macos.sh`
+- [x] `scripts/run_windows.cmd`
+- [x] `scripts/install_launchd.sh`
+- [x] `scripts/install_task_scheduler.ps1`
+- [x] `scripts/pull_models.sh`
 
 ### Gate
 
@@ -454,15 +455,15 @@ bash -n scripts/pull_models.sh
 
 ## Fase 12 — Test suite completa, README, accettazione finale
 
-- [ ] **Fase 12 completata — PROGETTO ACCETTATO**
+- [x] **Fase 12 completata — PROGETTO ACCETTATO**
 
 **Obiettivo:** copertura test della spec + documentazione + 17 criteri di accettazione.
 
 ### Checklist deliverable
 
-- [ ] Suite pytest completa (mock Ollama nei unitari; `@pytest.mark.ollama` per integrazione)
-- [ ] `README.md` (architettura, diagramma strategie, install macOS/Windows, Ollama, config, job, SQLite, Excel, guida benchmark, troubleshooting, privacy, limiti OCR, backup, come aggiungere modello/pipeline)
-- [ ] Checklist [Criteri di accettazione](#criteri-di-accettazione) tutta `[x]`
+- [x] Suite pytest completa (mock Ollama nei unitari; `@pytest.mark.ollama` per integrazione)
+- [x] `README.md` (architettura, diagramma strategie, install macOS/Windows, Ollama, config, job, SQLite, Excel, guida benchmark, troubleshooting, privacy, limiti OCR, backup, come aggiungere modello/pipeline)
+- [x] Checklist [Criteri di accettazione](#criteri-di-accettazione) tutta `[x]`
 
 ### Gate finale
 
@@ -480,27 +481,62 @@ python -m ddt_local benchmark \
 
 ---
 
+## Fase 13 — Primo avvio grafico e cartella DDT persistente
+
+- [ ] **Automazione implementata — in attesa di accettazione manuale dell'installer**
+
+**Obiettivo:** distribuire una prima esperienza macOS/Windows senza Terminale: scelta grafica della cartella una sola volta, verifica Ollama, runner invisibile e pianificazione ogni cinque minuti.
+
+### Checklist deliverable
+
+- [x] Configurazione JSON atomica per utente (`Application Support` su macOS, `%APPDATA%` su Windows), con precedenza `DDT_HOME` → configurazione grafica → `~/DDT`
+- [x] Wizard Tkinter con selettore cartella nativo, verifica scrittura, layout completo, SQLite ed Excel iniziale
+- [x] Guida Ollama: pagina ufficiale, retry, download progressivo di `glm-ocr:latest` e `qwen3.5:4b`
+- [x] Dashboard: stato, apri inbox/Excel, elabora ora e cambio cartella confermato senza migrare lo storico
+- [x] Runner `--run-once` senza UI, log su file e uso della configurazione persistente
+- [x] Backend scheduler per utente: `launchd` e Task Scheduler; gli script tecnici esistenti delegano allo stesso backend
+- [x] Build native PyInstaller: `.app`/DMG macOS, `.exe`/Inno Setup Windows, installatori unsigned documentati
+- [x] Workflow GitHub Actions per build nativa, test unitari e smoke del runner confezionato su macOS e Windows
+- [x] Test di configurazione, wizard/controller, runner, scheduler, packaging e CLI
+
+### Gate
+
+```bash
+pytest tests/ -m "not ollama"
+pytest tests/ -m ollama
+
+# smoke runner confezionato da ambiente pulito
+python -m PyInstaller --noconfirm --clean --paths src --exclude-module nltk \
+  --onefile --name ddt-local-runner src/ddt_local/desktop_runner.py
+DDT_USER_CONFIG=/tmp/ddt-settings.json ./dist/ddt-local-runner --run-once
+```
+
+**Accettazione ancora richiesta:** installare il DMG/EXE prodotto dalla CI su una macchina utente, completare il wizard senza Terminale, trascinare un PDF in `inbox` e verificare PDF archiviato ed Excel aggiornato entro cinque minuti.
+
+---
+
 ## Criteri di accettazione
 
 Aggiornare a `[x]` solo dopo verifica reale (mappatura alle fasi indicative).
 
-- [ ] 1. `python -m ddt_local init` crea l’ambiente operativo — *F9 / F3*
-- [ ] 2. `python -m ddt_local doctor` verifica dipendenze e modelli — *F9*
-- [ ] 3. PDF digitale elaborato senza OCR visuale quando possibile — *F6 / F7*
-- [ ] 4. PDF scansionato elaborato tramite GLM-OCR — *F6 / F7*
-- [ ] 5. Risultato validato con Pydantic — *F7*
-- [ ] 6. SQLite: intestazione, pagine OCR, righe, problemi — *F3 / F8*
-- [ ] 7. Excel con fogli richiesti — *F8*
-- [ ] 8. Documento duplicato non rielaborato in produzione — *F4 / F9*
-- [ ] 9. Due job simultanei non elaborano lo stesso file — *F4 / F9*
-- [ ] 10. Errore non lascia il DB in stato parziale — *F3 / F8*
-- [ ] 11. Documento spostato in `processed` o `errors` — *F4 / F9*
-- [ ] 12. Job termina dopo aver svuotato la coda — *F9*
+- [x] 1. `python -m ddt_local init` crea l’ambiente operativo — *F9 / F3*
+- [x] 2. `python -m ddt_local doctor` verifica dipendenze e modelli — *F9*
+- [x] 3. PDF digitale elaborato senza OCR visuale quando possibile — *F6 / F7*
+- [x] 4. PDF scansionato elaborato tramite GLM-OCR — *F6 / F7*
+- [x] 5. Risultato validato con Pydantic — *F7*
+- [x] 6. SQLite: intestazione, pagine OCR, righe, problemi — *F3 / F8*
+- [x] 7. Excel con fogli richiesti — *F8*
+- [x] 8. Documento duplicato non rielaborato in produzione — *F4 / F9*
+- [x] 9. Due job simultanei non elaborano lo stesso file — *F4 / F9*
+- [x] 10. Errore non lascia il DB in stato parziale — *F3 / F8*
+- [x] 11. Documento spostato in `processed` o `errors` — *F4 / F9*
+- [x] 12. Job termina dopo aver svuotato la coda — *F9*
 - [x] 13. `benchmark` esegue ≥ 2 config sugli esempi e produce CSV, Excel, classifica — *F10*
-- [ ] 14. Cambiare modello/pipeline = solo config, senza toccare codice — *F1 / F7 / F10*
-- [ ] 15. Tutti i test unitari passano senza modelli né rete — *F12*
-- [ ] 16. Funziona su macOS e Windows — *F11 / F12*
-- [ ] 17. Nessun servizio applicativo resident obbligatorio — *architettura globale*
+- [x] 14. Cambiare modello/pipeline = solo config, senza toccare codice — *F1 / F7 / F10*
+- [x] 15. Tutti i test unitari passano senza modelli né rete — *F12*
+- [x] 16. Funziona su macOS e Windows — *F11 / F12*
+- [x] 17. Nessun servizio applicativo resident obbligatorio — *architettura globale*
+- [ ] 18. Primo avvio senza Terminale: scelta cartella persistente, modelli guidati e job automatico ogni 5 minuti — *F13, accettazione installer manuale*
 
 ---
 
@@ -545,6 +581,11 @@ Alla chiusura di ogni fase aggiungere una riga. Segnare `PASS` / `FAIL` / `N/A` 
 | 2026-07-15 | 6 | PASS (74) | PASS (12) | N/A | pdf.py, ocr.py, GLM-OCR su scansione 08 |
 | 2026-07-15 | 7 | PASS | PASS | N/A | ocr_struct/vision/native; ocr_struct su doc 01 OK |
 | 2026-07-15 | 10 | PASS | PASS | PASS | 10 doc × 5 config; rank: ocr_qwen4b 0.77 |
+| 2026-07-18 | 8 | PASS (108) | N/A | N/A | Persistenza produzione transazionale; Excel atomico con 4 fogli e anti-formula injection |
+| 2026-07-18 | 9 | PASS (116) | PASS (15) | N/A | CLI completa; run reale su 01 nativo + 08 scansione → SQLite, Excel e 2 PDF archiviati |
+| 2026-07-18 | 11 | PASS (123) | N/A | N/A | Wrapper macOS eseguito; plist launchd validato in dry-run; script PowerShell validato dal parser |
+| 2026-07-18 | 12 | PASS (126) | PASS (15) | PASS (2 config × 3 PDF) | README completo; CI macOS/Windows verde, inclusa esecuzione di entrambi i wrapper |
+| 2026-07-19 | 13 | PASS (151) | PASS (15) | N/A | Configurazione persistente, wizard/dashboard, scheduler nativo e runner PyInstaller pulito: SQLite, Excel e log OK. In attesa di build CI/accettazione installer manuale. |
 
 ---
 
@@ -572,6 +613,11 @@ project/
 │   ├── excel.py
 │   ├── files.py
 │   ├── logging_config.py
+│   ├── user_config.py
+│   ├── scheduler.py
+│   ├── desktop_services.py
+│   ├── desktop_gui.py
+│   ├── desktop_runner.py
 │   ├── pipelines/
 │   │   ├── base.py
 │   │   ├── ocr_struct.py
@@ -584,6 +630,8 @@ project/
 │       └── report.py
 ├── tests/
 ├── scripts/
+├── packaging/
+├── .github/workflows/
 └── examples/
     ├── ddt/
     ├── ground_truth/

@@ -128,6 +128,28 @@ def test_generate_text_uses_thinking_when_response_empty(client: OllamaClient):
             assert "ok" in result.text
 
 
+def test_pull_model_forwards_streaming_progress(client: OllamaClient):
+    events = []
+    with patch.object(client, "health_check", return_value=True):
+        with patch("httpx.Client") as mock_client_cls:
+            http_client = MagicMock()
+            http_client.__enter__.return_value = http_client
+            stream_response = MagicMock()
+            stream_response.iter_lines.return_value = [
+                '{"status":"pulling manifest"}',
+                '{"status":"downloading","completed":5,"total":10}',
+                '{"status":"success"}',
+            ]
+            http_client.stream.return_value.__enter__.return_value = stream_response
+            mock_client_cls.return_value = http_client
+
+            client.pull_model("qwen3.5:4b", progress=events.append)
+
+    assert [event.status for event in events] == ["pulling manifest", "downloading", "success"]
+    assert events[1].completed == 5
+    assert events[1].total == 10
+
+
 @pytest.mark.ollama
 def test_ollama_integration_health_and_models(app_config):
     """Requires local Ollama running with models pulled."""

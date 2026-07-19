@@ -23,10 +23,13 @@ dependencies = [
 dev = [
     "pytest>=8.0",
     "pytest-cov>=5.0",
+    "pyinstaller>=6.0",
 ]
 
 [project.scripts]
 ddt-local = "ddt_local.cli:main"
+ddt-local-gui = "ddt_local.desktop_gui:main"
+ddt-local-runner = "ddt_local.desktop_runner:main"
 
 [tool.hatch.build.targets.wheel]
 packages = ["src/ddt_local"]

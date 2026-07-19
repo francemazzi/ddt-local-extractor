@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import shutil
 from pathlib import Path
 
 import pytest
@@ -14,6 +15,7 @@ from ddt_local.models import DocumentoDDT, documento_ddt_json_schema
 from ddt_local.ollama import OllamaClient
 from ddt_local.pdf import analyze_pdf, render_page_png
 from ddt_local.pipelines import create_pipeline
+from ddt_local.production import run_once
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 DATASET_DIR = PROJECT_ROOT / "dataset"
@@ -175,6 +177,28 @@ def test_phase7_ocr_struct_on_native_pdf(ollama_client: OllamaClient, ensure_mod
     assert result.document is not None
     assert result.document.documento.numero_ddt
     ollama_client.unload_model(settings.struct_model)
+
+
+# --- Phase 9: production job on both native and scanned inputs ---
+
+
+@pytest.mark.ollama
+def test_phase9_run_once_native_and_scan(ensure_models, monkeypatch: pytest.MonkeyPatch, tmp_path):
+    monkeypatch.setenv("DDT_HOME", str(tmp_path / "DDT"))
+    monkeypatch.setenv("DDT_FILE_STABILITY_SECONDS", "0")
+    config = load_config()
+    config.inbox_dir.mkdir(parents=True)
+    shutil.copy2(NATIVE_PDF, config.inbox_dir / NATIVE_PDF.name)
+    shutil.copy2(SCAN_PDF, config.inbox_dir / SCAN_PDF.name)
+
+    summary = run_once(config, check_stability=False)
+    database = Database(config.database_path)
+
+    assert summary.exit_code == 0
+    assert summary.processed == 2
+    assert database.count_production_documents() == 2
+    assert config.excel_path.exists()
+    assert len(list(config.processed_dir.rglob("*.pdf"))) == 2
 
 
 # --- Phase 10: benchmark scoring smoke with live extract (subset) ---

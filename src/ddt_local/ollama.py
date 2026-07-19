@@ -3,12 +3,13 @@
 from __future__ import annotations
 
 import base64
+import json
 import logging
 import time
 import tracemalloc
 from dataclasses import dataclass, field
 from pathlib import Path
-from typing import Any
+from typing import Any, Callable
 
 import httpx
 
@@ -44,6 +45,15 @@ class GenerateResult:
     duration_seconds: float
     peak_memory_bytes: int | None = None
     raw_response: dict[str, Any] = field(default_factory=dict)
+
+
+@dataclass(frozen=True)
+class PullProgress:
+    """One progress event emitted by Ollama's streaming pull API."""
+
+    status: str
+    completed: int | None = None
+    total: int | None = None
 
 
 class OllamaClient:
@@ -101,6 +111,38 @@ class OllamaClient:
                 )
         except httpx.HTTPError as exc:
             logger.warning("Failed to unload model %s: %s", model, type(exc).__name__)
+
+    def pull_model(
+        self,
+        model: str,
+        *,
+        progress: Callable[[PullProgress], None] | None = None,
+    ) -> None:
+        """Download a local model while forwarding Ollama's progress events."""
+        if not self.health_check():
+            raise OllamaUnavailableError(
+                f"Ollama is not reachable at {self._base_url}. Start or install Ollama first."
+            )
+        try:
+            with self._client() as client:
+                with client.stream("POST", "/api/pull", json={"model": model, "stream": True}) as response:
+                    response.raise_for_status()
+                    for line in response.iter_lines():
+                        if not line:
+                            continue
+                        event = json.loads(line)
+                        if event.get("error"):
+                            raise OllamaServiceError(str(event["error"]))
+                        if progress is not None:
+                            progress(
+                                PullProgress(
+                                    status=str(event.get("status", "Downloading")),
+                                    completed=_optional_int(event.get("completed")),
+                                    total=_optional_int(event.get("total")),
+                                )
+                            )
+        except (httpx.HTTPError, json.JSONDecodeError) as exc:
+            raise OllamaServiceError(f"Cannot download model '{model}': {exc}") from exc
 
     def generate_text(
         self,
@@ -202,3 +244,12 @@ class OllamaClient:
         tracemalloc.stop()
         assert last_error is not None
         raise last_error
+
+
+def _optional_int(value: object) -> int | None:
+    if value is None:
+        return None
+    try:
+        return int(value)
+    except (TypeError, ValueError):
+        return None

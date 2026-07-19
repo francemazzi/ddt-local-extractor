@@ -1,0 +1,47 @@
+name: Cross-platform unit checks
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  macos:
+    runs-on: macos-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Create isolated environment
+        run: |
+          python -m venv .venv
+          .venv/bin/python -m pip install --upgrade pip
+          .venv/bin/python -m pip install -e ".[dev]"
+      - name: Run unit tests
+        run: .venv/bin/python -m pytest tests/ -m "not ollama"
+      - name: Run the macOS wrapper on an empty queue
+        env:
+          DDT_HOME: ${{ runner.temp }}/DDT
+        run: ./scripts/run_macos.sh
+
+  windows:
+    runs-on: windows-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Create isolated environment
+        shell: cmd
+        run: |
+          python -m venv .venv
+          .venv\Scripts\python -m pip install --upgrade pip
+          .venv\Scripts\python -m pip install -e ".[dev]"
+      - name: Run unit tests
+        shell: cmd
+        run: .venv\Scripts\python -m pytest tests/ -m "not ollama"
+      - name: Run the Windows wrapper on an empty queue
+        shell: cmd
+        env:
+          DDT_HOME: ${{ runner.temp }}\DDT
+        run: scripts\run_windows.cmd
