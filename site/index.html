@@ -112,6 +112,12 @@
       .step-icon svg { width: 23px; }.step h3 { margin: 0 0 9px; font-size: 19px; letter-spacing: -.04em; }.step p { max-width: 285px; margin: 0; color: #565650; font-size: 14px; line-height: 1.55; }
       .step:nth-child(2) .step-icon { background: var(--acid); }.step:nth-child(3) .step-icon { color: var(--paper); background: var(--ink); }
 
+      .demo { padding: 110px 0 120px; border-top: 1px solid #dcdcd4; background: var(--ink); color: var(--paper); }
+      .demo .section-heading p { color: var(--muted); }
+      .demo-frame { margin: 0; max-width: 960px; border: 1px solid rgba(216,250,89,.5); background: rgba(16,16,14,.94); box-shadow: 18px 18px 0 rgba(216,250,89,.14); overflow: hidden; }
+      .demo-frame img { display: block; width: 100%; height: auto; }
+      .demo-frame figcaption { padding: 14px 18px; border-top: 1px solid var(--line); color: #95958f; font: 400 11px/1.5 var(--mono); }
+
       .download-zone { position: relative; padding: 120px 0; overflow: hidden; border-top: 1px solid var(--line); }
       .download-zone::before { content: "01.00"; position: absolute; top: 25px; right: -17px; color: rgba(255,255,255,.035); font: 800 clamp(8rem, 22vw, 22rem)/1 var(--sans); letter-spacing: -.12em; }
       .download-header { position: relative; z-index: 1; display: flex; justify-content: space-between; align-items: end; gap: 24px; margin-bottom: 34px; }
@@ -138,7 +144,7 @@
         .pointer.is-active { width: 37px; height: 37px; margin: -18px 0 0 -18px; background: var(--acid); }
       }
       @media (max-width: 820px) { .hero-layout, .local-grid { grid-template-columns: 1fr; gap: 25px; }.hero { min-height: auto; }.terminal { width: min(100%, 470px); margin: 0 0 75px; }.statement-grid { grid-template-columns: 1fr; gap: 23px; }.packages { grid-template-columns: 1fr; }.package { min-height: 210px; }.section-heading, .download-header { align-items: start; flex-direction: column; }.steps, .mac-first-run { grid-template-columns: 1fr; }.step { min-height: 255px; }.step-icon { margin: 35px 0 23px; } }
-      @media (max-width: 570px) { .shell { width: min(100% - 32px, 1180px); }.nav { height: 68px; }.nav-links a:not(.nav-download) { display: none; }.nav-download { padding: 9px 11px; }.brand { font-size: 12px; } h1 { font-size: clamp(3rem, 15vw, 4.3rem); }.hero-copy { padding: 58px 0 32px; }.hero-text { font-size: 16px; }.hero-actions { align-items: stretch; flex-direction: column; }.button { width: 100%; }.terminal-body { padding: 19px 16px; font-size: 10px; }.statement, .how, .download-zone, .local { padding: 78px 0; }.footer-row { align-items: start; flex-direction: column; }.download-zone::before { top: 8px; }.trust { gap: 9px 15px; } }
+      @media (max-width: 570px) { .shell { width: min(100% - 32px, 1180px); }.nav { height: 68px; }.nav-links a:not(.nav-download) { display: none; }.nav-download { padding: 9px 11px; }.brand { font-size: 12px; } h1 { font-size: clamp(3rem, 15vw, 4.3rem); }.hero-copy { padding: 58px 0 32px; }.hero-text { font-size: 16px; }.hero-actions { align-items: stretch; flex-direction: column; }.button { width: 100%; }.terminal-body { padding: 19px 16px; font-size: 10px; }.statement, .how, .demo, .download-zone, .local { padding: 78px 0; }.footer-row { align-items: start; flex-direction: column; }.download-zone::before { top: 8px; }.trust { gap: 9px 15px; } }
       @media (prefers-reduced-motion: reduce) { *, *::before, *::after { scroll-behavior: auto!important; animation-duration: .01ms!important; animation-iteration-count: 1!important; transition-duration: .01ms!important; } }
     </style>
   </head>
@@ -150,6 +156,7 @@
           <a class="brand" href="#inizio" aria-label="DDT Local Extractor, torna all'inizio"><span class="brand-mark"></span>DDT LOCAL EXTRACTOR</a>
           <div class="nav-links">
             <a href="#come-funziona">Come funziona</a>
+            <a href="#demo">Demo</a>
             <a href="#privacy">Privacy</a>
             <a class="nav-download" href="#scarica">Scarica lo ZIP ↗</a>
           </div>
@@ -225,6 +232,25 @@
             <h3>Trascina i tuoi DDT</h3><p>Metti i file nella inbox: vengono estratti e riportati in Excel. Il controllo ogni 5 minuti si può disattivare dalla dashboard.</p>
           </article>
         </div>
+      </div>
+    </section>
+
+    <section class="demo" id="demo">
+      <div class="shell">
+        <div class="section-heading">
+          <div><span class="eyebrow">DEMO</span><h2>Vedi l'app al lavoro, sul tuo computer.</h2></div>
+          <p>Registrazione reale: configurazione, elaborazione di un DDT e aggiornamento dell'Excel, tutto in locale.</p>
+        </div>
+        <figure class="demo-frame">
+          <img
+            src="public/ddt-demo.gif"
+            alt="Demo di DDT Local Extractor in esecuzione locale"
+            loading="lazy"
+            width="640"
+            height="414"
+          />
+          <figcaption>Elaborazione locale: dalla inbox all'Excel, senza cloud.</figcaption>
+        </figure>
       </div>
     </section>
 
