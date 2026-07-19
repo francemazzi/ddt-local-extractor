@@ -125,8 +125,8 @@ jobs:
           $env:DDT_USER_CONFIG = Join-Path $smokeRoot "settings.json"
           $env:DDT_SMOKE_HOME = Join-Path $smokeRoot "DDT"
           python -c "import os; from pathlib import Path; from ddt_local.user_config import UserSettings, save_user_settings; save_user_settings(UserSettings(ddt_home=Path(os.environ['DDT_SMOKE_HOME']), setup_completed=True), Path(os.environ['DDT_USER_CONFIG']))"
-          & ".\dist\DDT Local Extractor\ddt-local-runner.exe" --run-once
-          $runnerExitCode = $LASTEXITCODE
+          $runner = Start-Process -FilePath ".\dist\DDT Local Extractor\ddt-local-runner.exe" -ArgumentList "--run-once" -Wait -PassThru
+          $runnerExitCode = $runner.ExitCode
           if ($runnerExitCode -ne 0) {
             $runnerLog = Join-Path $env:DDT_SMOKE_HOME "logs\desktop-runner.log"
             if (Test-Path $runnerLog) { Get-Content $runnerLog }
