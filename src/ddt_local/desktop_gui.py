@@ -63,7 +63,7 @@ class DesktopApplication:
 
     def show_initial(self) -> None:
         status = self.controller.status()
-        if status.configured and status.ready:
+        if status.configured:
             self.show_dashboard()
         else:
             self.show_wizard()
@@ -240,7 +240,47 @@ class DesktopApplication:
             row=0, column=1, padx=(0, 8), pady=4
         )
         self.ttk.Button(buttons, text="Elabora ora", command=self.run_now).grid(row=0, column=2, pady=4)
+        if status.scheduler_enabled:
+            self.ttk.Button(
+                buttons,
+                text="Disattiva automazione",
+                command=self.stop_scheduler,
+            ).grid(row=1, column=0, columnspan=2, sticky="w", pady=(8, 0))
+        else:
+            self.ttk.Button(
+                buttons,
+                text="Attiva automazione",
+                command=self.start_scheduler,
+            ).grid(row=1, column=0, columnspan=2, sticky="w", pady=(8, 0))
         self.ttk.Button(self.frame, text="Impostazioni", command=self.change_directory).pack(anchor="w", pady=(10, 0))
+
+    def stop_scheduler(self) -> None:
+        confirmed = self.messagebox.askyesno(
+            "Disattiva automazione",
+            "L'app non controllerà più la inbox ogni 5 minuti. Potrai riattivarla in seguito. Continuare?",
+        )
+        if not confirmed:
+            return
+        try:
+            self.controller.stop_scheduler()
+        except DesktopSetupError as exc:
+            self.messagebox.showerror("Automazione", str(exc))
+            return
+        self.messagebox.showinfo("Automazione disattivata", "La cartella inbox non verrà più controllata automaticamente.")
+        self.show_dashboard()
+
+    def start_scheduler(self) -> None:
+        status = self.controller.status()
+        if status.ddt_home is None:
+            self.messagebox.showerror("Automazione", "Manca la cartella DDT. Apri Impostazioni e scegli una cartella.")
+            return
+        try:
+            self.controller.complete_setup(status.ddt_home)
+        except DesktopSetupError as exc:
+            self.messagebox.showerror("Automazione", str(exc))
+            return
+        self.messagebox.showinfo("Automazione attivata", "La cartella inbox verrà controllata ogni 5 minuti.")
+        self.show_dashboard()
 
     def open_excel(self, ddt_home: Path | None) -> None:
         if ddt_home is None:

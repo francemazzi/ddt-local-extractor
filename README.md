@@ -13,6 +13,7 @@ L'utente finale non deve usare il Terminale né impostare `DDT_HOME`.
 3. Al primo avvio l'app apre il selettore cartella nativo: scegli la cartella DDT esatta, per esempio `Documenti/DDT`.
 4. L'app crea automaticamente `inbox`, `processed`, `errors`, `output` e il database; controlla Ollama e guida al download dei due modelli richiesti.
 5. Trascina i PDF in `inbox`. L'app li elabora automaticamente entro cinque minuti; la dashboard permette anche **Elabora ora**, **Apri inbox** e **Apri Excel**.
+6. L'automazione è facoltativa: dalla dashboard usa **Disattiva automazione** per fermare il controllo ogni cinque minuti, oppure **Attiva automazione** per riattivarlo.
 
 La release stabile corrente è **v1.0.0**. Verifica sempre che lo ZIP provenga dalla release ufficiale. Su macOS il primo avvio richiede `Ctrl` + clic su `start.command` → **Apri**; l'avviatore poi abilita i normali doppi clic successivi.
 
@@ -189,7 +190,27 @@ python -m ddt_local benchmark \
 
 I report CSV e XLSX sono scritti in `DDT_HOME/benchmark/`; la classifica per `weighted_score` è stampata anche nel terminale. Il benchmark non scrive nelle tabelle produttive `ddt_headers` e `ddt_lines`.
 
-## Scheduling
+## Automazione e stop
+
+Quando nel wizard scegli **Completa e attiva elaborazione automatica**, l'app registra un controllo della cartella `inbox` ogni cinque minuti. Non è un servizio permanente: esegue una sola elaborazione e termina.
+
+La via consigliata è la dashboard dell'app:
+
+- **Disattiva automazione** interrompe il controllo e salva la scelta;
+- **Attiva automazione** lo riabilita per la cartella DDT già selezionata.
+
+Ogni ZIP distribuito contiene anche un comando di stop, utile anche se l'app è stata eliminata ma hai conservato la cartella ZIP estratta:
+
+- macOS: esegui `stop.command` dalla cartella ZIP estratta (alla prima apertura: `Ctrl` + clic → **Apri**);
+- Windows: esegui `stop.bat` dalla cartella ZIP estratta.
+
+Se non hai più lo ZIP su macOS, puoi aprire Terminale ed eseguire questo comando, che rimuove solo l'agente di DDT Local Extractor:
+
+```bash
+launchctl bootout gui/$(id -u) "$HOME/Library/LaunchAgents/com.ddt-local-extractor.run.plist"; rm -f "$HOME/Library/LaunchAgents/com.ddt-local-extractor.run.plist"
+```
+
+## Scheduling tecnico
 
 macOS (agente utente launchd, ogni 5 minuti e al login):
 
@@ -208,7 +229,7 @@ Windows (Task Scheduler, ogni 5 minuti):
 
 Entrambi gli scheduler eseguono un comando one-shot `run --once`; non esiste un servizio applicativo Python residente obbligatorio.
 
-Nell'app desktop lo scheduler viene attivato dal wizard e richiama un runner invisibile ogni cinque minuti. Gli script in questa sezione restano strumenti tecnici; usano lo stesso backend dello scheduler grafico.
+Nell'app desktop lo scheduler viene attivato e disattivato dalla dashboard; gli script in questa sezione restano strumenti tecnici e usano lo stesso backend.
 
 ## Aggiungere un modello o una pipeline
 

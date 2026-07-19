@@ -19,3 +19,15 @@ L'app crea nella cartella scelta:
 
 Al primo avvio l'app verifica Ollama e ti guida nel download dei modelli necessari.
 PDF, Excel e database restano sul tuo computer.
+
+AUTOMAZIONE E STOP
+==================
+
+Dopo "Completa e attiva elaborazione automatica", l'app controlla la cartella
+inbox ogni 5 minuti. Per fermarla:
+- dall'app: dashboard -> Disattiva automazione;
+- Windows: doppio clic su stop.bat;
+- macOS: doppio clic su stop.command (se macOS lo chiede la prima volta,
+  Ctrl + clic -> Apri).
+
+Puoi riattivarla in qualsiasi momento dalla dashboard con Attiva automazione.

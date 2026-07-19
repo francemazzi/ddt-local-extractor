@@ -89,6 +89,7 @@ jobs:
           test -f "$DDT_SMOKE_HOME/output/DDT_estratti.xlsx"
           codesign --verify --deep --strict "./dist/DDT Local Extractor.app"
           unzip -l dist/*.zip | grep -F "start.command"
+          unzip -l dist/*.zip | grep -F "stop.command"
       - uses: actions/upload-artifact@v4
         with:
           name: ddt-local-extractor-${{ matrix.artifact_label }}
@@ -143,6 +144,7 @@ jobs:
           $archive = Get-ChildItem .\dist\*.zip | Select-Object -First 1
           if (-not $archive) { throw "Portable ZIP not created" }
           if (-not ((tar -tf $archive.FullName) -match "start.bat")) { throw "start.bat missing from portable ZIP" }
+          if (-not ((tar -tf $archive.FullName) -match "stop.bat")) { throw "stop.bat missing from portable ZIP" }
       - uses: actions/upload-artifact@v4
         with:
           name: ddt-local-extractor-windows
@@ -171,6 +173,8 @@ jobs:
             Release desktop di DDT Local Extractor.
 
             Scarica lo ZIP adatto al tuo computer, estrailo e avvia `start.command` su macOS oppure `start.bat` su Windows. Su macOS, solo la prima volta: ctrl-clic su `start.command` → Apri → Apri; in seguito basta il doppio clic. Al primo avvio l'app chiede la cartella di lavoro e guida l'installazione di Ollama e dei modelli necessari.
+
+            L'elaborazione automatica della inbox ogni cinque minuti si attiva o disattiva dalla dashboard. In alternativa, ogni ZIP include `stop.command` (macOS) o `stop.bat` (Windows).
 
             I PDF, il database e l'Excel restano sul computer.
           files: release-assets/*

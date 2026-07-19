@@ -3,8 +3,10 @@
 from __future__ import annotations
 
 import argparse
+import sys
 
 from ddt_local.config import load_config
+from ddt_local.desktop_services import DesktopSetupError, DesktopSetupController
 from ddt_local.excel import write_production_excel
 from ddt_local.logging_config import configure_logging, get_logger, new_run_id
 from ddt_local.production import initialize_operational_home, run_once
@@ -14,11 +16,23 @@ from ddt_local.user_config import load_user_settings
 def build_parser() -> argparse.ArgumentParser:
     parser = argparse.ArgumentParser(prog="ddt-local-runner")
     parser.add_argument("--run-once", action="store_true", help="Process the inbox once and exit")
+    parser.add_argument(
+        "--stop-scheduler",
+        action="store_true",
+        help="Disable automatic processing and exit",
+    )
     return parser
 
 
 def main(argv: list[str] | None = None) -> int:
     args = build_parser().parse_args(argv)
+    if args.stop_scheduler:
+        try:
+            DesktopSetupController().stop_scheduler()
+        except DesktopSetupError as exc:
+            print(str(exc), file=sys.stderr)
+            return 1
+        return 0
     if not args.run_once:
         return 2
 

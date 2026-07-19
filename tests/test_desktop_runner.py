@@ -28,3 +28,10 @@ def test_runner_uses_persisted_path_and_writes_log(monkeypatch, tmp_path: Path):
     assert run.call_args.args[0].ddt_home == ddt_home.resolve()
     assert (ddt_home / "logs" / "desktop-runner.log").exists()
     assert (ddt_home / "output" / "DDT_estratti.xlsx").exists()
+
+
+def test_runner_can_stop_the_automatic_scheduler():
+    with patch("ddt_local.desktop_runner.DesktopSetupController.stop_scheduler") as stop_scheduler:
+        assert main(["--stop-scheduler"]) == 0
+
+    stop_scheduler.assert_called_once_with()

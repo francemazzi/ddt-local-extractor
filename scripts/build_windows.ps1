@@ -29,6 +29,7 @@ New-Item -ItemType Directory -Path $PackageDir | Out-Null
 Copy-Item $AppDir $PackageDir -Recurse
 Copy-Item (Join-Path $ProjectDir "dist\ddt-local-runner.exe") (Join-Path $PackageDir "DDT Local Extractor\ddt-local-runner.exe") -Force
 Copy-Item (Join-Path $ProjectDir "packaging\start.bat") (Join-Path $PackageDir "start.bat")
+Copy-Item (Join-Path $ProjectDir "packaging\stop.bat") (Join-Path $PackageDir "stop.bat")
 Copy-Item (Join-Path $ProjectDir "packaging\LEGGIMI.txt") (Join-Path $PackageDir "LEGGIMI.txt")
 
 Compress-Archive -Path $PackageDir -DestinationPath $ArchivePath -CompressionLevel Optimal

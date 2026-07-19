@@ -67,6 +67,27 @@ def test_complete_setup_persists_selection_and_installs_scheduler(app_config, tm
     assert schedule_calls[0]["interval_seconds"] == 300
 
 
+def test_stop_scheduler_removes_task_and_persists_disabled_choice(app_config, tmp_path: Path):
+    settings_path = tmp_path / "config.json"
+    save_user_settings(
+        UserSettings(ddt_home=tmp_path / "Selected", scheduler_enabled=True, setup_completed=True),
+        settings_path,
+    )
+    removals: list[bool] = []
+    controller = DesktopSetupController(
+        settings_path=settings_path,
+        config_loader=lambda: app_config,
+        scheduler_remover=lambda: removals.append(True),
+    )
+
+    settings = controller.stop_scheduler()
+
+    assert removals == [True]
+    assert settings is not None
+    assert settings.scheduler_enabled is False
+    assert read_user_settings(settings_path) == settings
+
+
 def test_missing_models_downloads_with_progress(app_config, tmp_path: Path):
     fake = FakeOllama(app_config, models=[])
     controller = DesktopSetupController(

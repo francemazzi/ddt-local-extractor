@@ -13,7 +13,12 @@ from ddt_local.config import AppConfig, load_config
 from ddt_local.excel import write_production_excel
 from ddt_local.ollama import OllamaClient, OllamaServiceError, PullProgress
 from ddt_local.production import RunSummary, initialize_operational_home, run_once
-from ddt_local.scheduler import DEFAULT_INTERVAL_SECONDS, default_runner_command, install_scheduler
+from ddt_local.scheduler import (
+    DEFAULT_INTERVAL_SECONDS,
+    default_runner_command,
+    install_scheduler,
+    remove_scheduler,
+)
 from ddt_local.user_config import (
     UserSettings,
     UserSettingsError,
@@ -77,12 +82,14 @@ class DesktopSetupController:
         settings_path: Path | None = None,
         config_loader: Callable[[], AppConfig] = load_config,
         scheduler_installer: Callable[..., Path | None] = install_scheduler,
+        scheduler_remover: Callable[[], None] = remove_scheduler,
         runner_command: Sequence[str] | None = None,
         ollama_factory: Callable[[AppConfig], OllamaClient] = OllamaClient,
     ) -> None:
         self.settings_path = settings_path
         self._config_loader = config_loader
         self._scheduler_installer = scheduler_installer
+        self._scheduler_remover = scheduler_remover
         self._runner_command = list(runner_command) if runner_command else None
         self._ollama_factory = ollama_factory
 
@@ -158,6 +165,22 @@ class DesktopSetupController:
         )
         save_user_settings(settings, self.settings_path)
         return settings
+
+    def stop_scheduler(self) -> UserSettings | None:
+        """Disable automatic processing and remember that choice for this user."""
+        try:
+            self._scheduler_remover()
+        except Exception as exc:
+            raise DesktopSetupError(f"Non è possibile disattivare l'elaborazione automatica: {exc}") from exc
+        try:
+            settings = read_user_settings(self.settings_path)
+        except UserSettingsError as exc:
+            raise DesktopSetupError(f"Non è possibile aggiornare le impostazioni: {exc}") from exc
+        if settings is None:
+            return None
+        stopped_settings = replace(settings, scheduler_enabled=False)
+        save_user_settings(stopped_settings, self.settings_path)
+        return stopped_settings
 
     def status(self) -> DesktopStatus:
         try:
